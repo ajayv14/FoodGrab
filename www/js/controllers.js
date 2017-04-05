@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ngStorage'])
 
 .controller('DashCtrl', function($scope) {})
 
@@ -21,11 +21,48 @@ angular.module('starter.controllers', [])
   $scope.menuItems = Chats.get($stateParams.choiceId);
 })
 
-.controller('CustomizationsCtrl', function($scope,$stateParams,$location) {
+.controller('CustomizationsCtrl', function($scope,$stateParams,$location,$localStorage,
+    $sessionStorage,Local) {
 
    $scope.itemId = $stateParams.itemId
-  $scope.addToCart = function(itemId){
-    
+   $scope.addToCart = function(itemId){   
+   
+   var order = {"itemId": $scope.itemId , "itemQuantity": "1"};
+  
+  /*
+   Storage.prototype.setObj = function(key, value) {
+    this.setItem(key, JSON.stringify(value));
+   }
+
+   Storage.prototype.getObj = function(key) {
+    var value = this.getItem(key);
+    return JSON.parse(value);
+   }
+ 
+ */
+    // add to cart to be implemented (local storage)
+   //$sessionStorage.order = $sessionStorage.order || 0
+   // $sessionStorage.order = order;  
+   // local storage array
+   /* var cartArray = [];
+   
+      if(localStorage.getObj('cart')!=null){
+       cartArray = localStorage.getObj('cart') ;
+       //update the cart array with new entry
+       // cartArray.push(order);
+      localStorage.setObj('cart',order);
+    }
+    else {
+       cartArray.push(order);
+       localStorage.setObj('cart',order);
+     }
+
+      alert(localStorage.getObj('cart'));
+*/
+
+
+   Local.set(order);
+   alert(Local.get());
 
    $location.path('/tab/menu');
 
@@ -37,6 +74,11 @@ angular.module('starter.controllers', [])
   $scope.settings = {
     enableFriends: true
   };
-});
+})
 
+.controller('CheckoutCtrl', function($scope,Local) {
+  
+  $scope.fullOrder = Local.get();
+
+});
 

@@ -2,9 +2,8 @@ angular.module('starter.services', [])
 
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
-
   // Some fake testing data
-  var chats = [{
+   var chats = [{
     id: 0,
     name: 'south indian',
     lastText: 'Try the rice and curry',
@@ -31,7 +30,6 @@ angular.module('starter.services', [])
     face: 'img/mike.png'
   }];
 
-
 var menuItems = [{
     id: 0,items: [{id: 0,item_Id: 000,name: 'Molaga bajji',lastText: 'spice warning',face: 'img/ben'},
     {id: 0,item_Id: 001, name: 'Vadai',lastText: 'deep fried donught shapped spicy dish',face: 'img/bepng'},
@@ -41,12 +39,10 @@ var menuItems = [{
     name: 'Pongal',
     lastText: 'Hey, it\'s me',
     face: 'img/max.png'
-  }];
-
-
-  
+  }]; 
 
   return {
+
     all: function() {
       return chats;
     },
@@ -60,11 +56,50 @@ var menuItems = [{
           return menuItems[i].items;
         }
       }
-      return null;
+    return null;
     }
-
- 
-
-
   };
+})
+
+.factory('Local',function(){ 
+
+  // local storage array
+  var cartArray = []; 
+/*
+   Storage.prototype.setObj = function(key, value) {
+    this.setItem(key, JSON.stringify(value));
+   }
+
+   Storage.prototype.getObj = function(key) {
+    var value = this.getItem(key);
+    return JSON.parse(value);
+   }
+  */
+    return {
+
+       get: function(){          
+          return localStorage.getItem('cart');
+       },
+
+       set: function(order){
+             
+          if(localStorage.getItem('cart')!==null){
+            //cartArray = JSON.parse(localStorage.getItem('cart'));
+            cartArray.push(JSON.stringify(order));  //update the cart array with new entry
+            localStorage.setItem('cart',cartArray);
+          }
+          else {
+           cartArray.push(order);
+           localStorage.setItem('cart',cartArray);
+         }
+
+       }    
+
+
+    };
+
 });
+
+
+
+

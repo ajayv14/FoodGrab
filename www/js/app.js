@@ -85,7 +85,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     views: {
       'tab-checkout': {
         templateUrl: 'templates/tab-checkout.html',
-        controller: ''
+        controller: 'CheckoutCtrl'
       }
     }
   });
