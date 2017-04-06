@@ -2,9 +2,14 @@
 <ion-view view-title="Customizations">
   <ion-content class="padding">
    <ion-list>
-    <ion-item>
-    <ion-input type="text" placeholder="Please enter any specific customizations for itemId" + itemId + ""></ion-input>
+
+ <ion-item>
+   <ion-textarea rows="4" cols="50">
+   </ion-textarea>
   </ion-item>
+
+
+  
    <ion-icon name="arrow-dropdown-circle"></ion-icon><ion-input type="text"></ion-input><ion-icon name="arrow-dropup-circle"></ion-icon>
    <p>itemId={{itemId}}</p>
     <button ion-button round ng-click="addToCart(itemId)" >Add to cart</button>

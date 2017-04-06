@@ -77,20 +77,21 @@ var menuItems = [{
   */
     return {
 
-       get: function(){          
-          return localStorage.getItem('cart');
+       get: function(){ 
+          return JSON.parse(localStorage.getItem('cart'));
        },
 
        set: function(order){
-             
+
           if(localStorage.getItem('cart')!==null){
-            //cartArray = JSON.parse(localStorage.getItem('cart'));
-            cartArray.push(JSON.stringify(order));  //update the cart array with new entry
-            localStorage.setItem('cart',cartArray);
-          }
+             cartArray = JSON.parse(localStorage.getItem('cart'));
+                          
+           cartArray.push(order);  //update the cart array with new entry
+           localStorage.setItem('cart',JSON.stringify(cartArray));
+         }
           else {
            cartArray.push(order);
-           localStorage.setItem('cart',cartArray);
+           localStorage.setItem('cart',JSON.stringify(cartArray));
          }
 
        }    

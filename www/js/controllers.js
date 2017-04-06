@@ -27,7 +27,7 @@ angular.module('starter.controllers', ['ngStorage'])
    $scope.itemId = $stateParams.itemId
    $scope.addToCart = function(itemId){   
    
-   var order = {"itemId": $scope.itemId , "itemQuantity": "1"};
+   var order = {'itemId':$scope.itemId,'itemQuantity':'1'};
   
   /*
    Storage.prototype.setObj = function(key, value) {
@@ -77,8 +77,6 @@ angular.module('starter.controllers', ['ngStorage'])
 })
 
 .controller('CheckoutCtrl', function($scope,Local) {
-  
-  $scope.fullOrder = Local.get();
-
+              $scope.fullOrder = Local.get();
 });
 
