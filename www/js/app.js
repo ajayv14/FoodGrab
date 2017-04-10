@@ -35,7 +35,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     .state('tab', {
     url: '/tab',
     abstract: true,
-    templateUrl: 'templates/tabs.html'
+    templateUrl: 'templates/tabs.html',
+    controller: 'TabCtrl'
   })
 
   // Each tab has its own nav history stack:
@@ -45,7 +46,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     views: {
       'tab-home': {
         templateUrl: 'templates/tab-home.html',
-        controller: 'DashCtrl'
+        controller: ''
       }
     }
   })
@@ -81,6 +82,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     })
 
   .state('tab.checkout', {
+    cache: false, // added to reload controller 
     url: '/checkout',
     views: {
       'tab-checkout': {
@@ -88,7 +90,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         controller: 'CheckoutCtrl'
       }
     }
+  })
+
+   .state('tab.item-confirmation', {
+    url: '/checkout/confirmation',
+    views: {
+      'tab-checkout': {
+        templateUrl: 'templates/item-confirmation.html',
+        controller: 'CheckoutCtrl'
+      }
+    }
   });
+
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/home');

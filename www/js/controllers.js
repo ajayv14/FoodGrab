@@ -1,8 +1,11 @@
-angular.module('starter.controllers', ['ngStorage'])
+angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {})
+.controller('TabCtrl', function($scope) {
+    //default badge value
+    $scope.$root.badgeCount = 0;
+})
 
-.controller('ChatsCtrl', function($scope, Chats) {
+.controller('ChatsCtrl', function($scope, Menu) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -11,64 +14,55 @@ angular.module('starter.controllers', ['ngStorage'])
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
-  $scope.choices = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
+  $scope.choices = Menu.all();
+  $scope.remove = function(choice) {
+    Menu.remove(choice);
   };
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.menuItems = Chats.get($stateParams.choiceId);
+.controller('ChatDetailCtrl', function($scope, $stateParams, Menu) {
+  $scope.menuItems = Menu.get($stateParams.choiceId);
 })
 
-.controller('CustomizationsCtrl', function($scope,$stateParams,$location,$localStorage,
-    $sessionStorage,Local) {
+.controller('CustomizationsCtrl', function($scope,$timeout,$stateParams,$location,Local,Menu,Price) {
 
    $scope.itemId = $stateParams.itemId
-   $scope.addToCart = function(itemId){   
-   
-   var order = {'itemId':$scope.itemId,'itemQuantity':'1'};
+   $scope.itemDetails = Menu.getSpecific($scope.itemId);
+  //alert('itemDetails'+$scope.itemDetails);
+   $scope.itemQuantity = 1; // default quantity
+
+   $scope.addToCart = function(itemId){ 
+
+      var order = {'itemId': $scope.itemDetails.item_Id,'name':$scope.itemDetails.name,'itemQuantity':$scope.itemQuantity,img:$scope.itemDetails.img, cost :$scope.itemQuantity*$scope.itemDetails.cost };
+
+      //var orderCount = localStorage.getItem('orderCount'); 
+      //orderCount++;
+      //localStorage.setItem('orderCount',orderCount);
+      //alert('count'+orderCount);
   
-  /*
-   Storage.prototype.setObj = function(key, value) {
-    this.setItem(key, JSON.stringify(value));
-   }
+     //compute and update total cost
+       Price.set(order.cost);
 
-   Storage.prototype.getObj = function(key) {
-    var value = this.getItem(key);
-    return JSON.parse(value);
-   }
- 
- */
-    // add to cart to be implemented (local storage)
-   //$sessionStorage.order = $sessionStorage.order || 0
-   // $sessionStorage.order = order;  
-   // local storage array
-   /* var cartArray = [];
-   
-      if(localStorage.getObj('cart')!=null){
-       cartArray = localStorage.getObj('cart') ;
-       //update the cart array with new entry
-       // cartArray.push(order);
-      localStorage.setObj('cart',order);
-    }
-    else {
-       cartArray.push(order);
-       localStorage.setObj('cart',order);
-     }
+      var redundantItem = false;
+      redundantItem = Local.set(order);
+      $scope.itemQuantity = '1';// set item quantity to default
+      //alert(Local.get());
+  
+    
+      if(redundantItem == false) $scope.$root.badgeCount++;
+        $location.path('/tab/menu');
 
-      alert(localStorage.getObj('cart'));
-*/
+  };
 
 
-   Local.set(order);
-   alert(Local.get());
+$scope.itemQuantityIncrement = function(){
+   $scope.itemQuantity++;
+};
 
-   $location.path('/tab/menu');
-
-  }; 
+$scope.itemQuantityDecrement = function(){
+  if($scope.itemQuantity>1) $scope.itemQuantity--;
+};
 })
-
 
 .controller('AccountCtrl', function($scope) {
   $scope.settings = {
@@ -76,7 +70,44 @@ angular.module('starter.controllers', ['ngStorage'])
   };
 })
 
-.controller('CheckoutCtrl', function($scope,Local) {
-              $scope.fullOrder = Local.get();
+.controller('CheckoutCtrl', function($scope,Local,Price,$http) {
+
+ 
+  $scope.fullOrder = Local.get();
+  $scope.subCost = Price.get();
+
+  $scope.removeItem = function(itemId){
+    Local.remove(itemId);
+      $scope.fullOrder = Local.get();
+
+      //$scope.subCost = Price.get();
+
+ 
+   //update order count
+   //var orderCount = localStorage.getItem('orderCount'); 
+   //orderCount--;
+   //localStorage.setItem('orderCount',orderCount); 
+   //alert('count'+orderCount);
+   $scope.$root.badgeCount--;
+    
+  };
+
+
+  $scope.placeOrder = function(){
+
+    var url = 'http://localhost:3000/PlaceOrder';
+
+   $http.post(url,JSON.stringify(Local.get()) ).then(function (res){
+            $scope.response = res.data;
+        });
+      
+
+ };
+
+
+
+
+
+
 });
 

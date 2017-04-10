@@ -1,53 +1,62 @@
 angular.module('starter.services', [])
 
-.factory('Chats', function() {
+.factory('Menu', function() {
   // Might use a resource here that returns a JSON array
-  // Some fake testing data
-   var chats = [{
+  var cusine = [{
     id: 0,
     name: 'south indian',
-    lastText: 'Try the rice and curry',
-    face: 'img/ben.png'
+    details: 'Try the rice and curry',
+    img: 'img/sampleIdlii.png'
   }, {
     id: 1,
     name: 'North Indian',
-    lastText: 'Get a taste of bread and spicy curries',
-    face: 'img/max.png'
+    details: 'Get a taste of bread and spicy curries',
+    img: 'img/sampleIdlii.png'
   }, {
     id: 2,
     name: 'Indo Chinese',
-    lastText: '',
-    face: 'img/adam.jpg'
+    details: '',
+    img: 'img/sampleIdlii.png'
   }, {
     id: 3,
     name: 'Pizza',
-    lastText: 'Look at my mukluks!',
-    face: 'img/perry.png'
+    details: 'Look at my mukluks!',
+    img: 'img/sampleIdlii.png'
   }, {
     id: 4,
     name: 'Specialities',
-    lastText: 'This is wicked good ice cream.',
-    face: 'img/mike.png'
+    details: 'This is wicked good ice cream.',
+    img: 'img/sampleIdlii.png'
   }];
 
-var menuItems = [{
-    id: 0,items: [{id: 0,item_Id: 000,name: 'Molaga bajji',lastText: 'spice warning',face: 'img/ben'},
-    {id: 0,item_Id: 001, name: 'Vadai',lastText: 'deep fried donught shapped spicy dish',face: 'img/bepng'},
-    {id: 0,item_Id: 002,name: 'Masala poori',lastText: 'mouth watering evening snacks',face: 'img/ben'}]
-  }, {
-    id: 1,
-    name: 'Pongal',
-    lastText: 'Hey, it\'s me',
-    face: 'img/max.png'
-  }]; 
+var menuItems = [{id: 0,items: 
+  [
+    {id: 0,item_Id: 'm',name: 'Molaga bajji',details: 'spice warning',img: 'img/sampleIdlii.png',cost:'5.00'},
+    {id: 0,item_Id: 'v', name: 'Vadai',details: 'deep fried donught shapped spicy dish',img: 'img/sampleIdlii.png',cost:'4.00'},
+    {id: 0,item_Id: 's',name: 'Masala poori',details: 'mouth watering evening snacks',img: 'img/sampleIdlii.png',cost:'7.80'}
+
+  ]
+
+  }, 
+{id: 1,items: 
+  [
+    {id: 1,item_Id: 'n',name: 'Paneer Butter Masala',details: 'spice warning',img: 'img/sampleIdlii.png',cost:'5.00'},
+    {id: 1,item_Id: 'a', name: 'Paratha',details: 'deep fried donught shapped spicy dish',img: 'img/sampleIdlii.png',cost:'5.00'},
+    {id: 1,item_Id: 'p',name: 'Pav bhaji',details: 'mouth watering evening snacks',img: 'img/sampleIdlii.png',cost:'5.00'}
+
+  ]
+
+  } 
+
+  ]; 
 
   return {
 
     all: function() {
-      return chats;
+      return cusine;
     },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
+    remove: function(itemId) {
+      cusine.splice(chats.indexOf(itemId), 1);
     },
     get: function(chatId) {
 
@@ -57,7 +66,29 @@ var menuItems = [{
         }
       }
     return null;
+    },
+
+    getSpecific: function(itemId) {
+
+      for (var i = 0; i < menuItems.length; i++) {        
+        
+         for (j=0;j<menuItems[i].items.length;j++){
+                            
+               if (menuItems[i].items[j].item_Id ==itemId) {
+                      return menuItems[i].items[j];
+                }
+
+         } 
+
+
+
+
+      }
+    return null;
     }
+
+
+    
   };
 })
 
@@ -65,16 +96,7 @@ var menuItems = [{
 
   // local storage array
   var cartArray = []; 
-/*
-   Storage.prototype.setObj = function(key, value) {
-    this.setItem(key, JSON.stringify(value));
-   }
 
-   Storage.prototype.getObj = function(key) {
-    var value = this.getItem(key);
-    return JSON.parse(value);
-   }
-  */
     return {
 
        get: function(){ 
@@ -84,20 +106,84 @@ var menuItems = [{
        set: function(order){
 
           if(localStorage.getItem('cart')!==null){
+             cartArray.splice(0,cartArray.length); 
              cartArray = JSON.parse(localStorage.getItem('cart'));
-                          
-           cartArray.push(order);  //update the cart array with new entry
-           localStorage.setItem('cart',JSON.stringify(cartArray));
+             
+              for (var its = 0; its < cartArray.length; its++) {
+                  
+                  if (cartArray[its].itemId === order.itemId) {
+                    //  alert( order.itemId+'repeat item');
+                      cartArray[its].itemQuantity = parseInt(cartArray[its].itemQuantity) + parseInt(order.itemQuantity); 
+                       cartArray[its].cost = parseInt(cartArray[its].cost) + parseInt(order.cost);
+                   // cartArray.splice(cartArray.indexOf(order.itemId),1);
+                      localStorage.setItem('cart',JSON.stringify(cartArray));    
+                      return true;                      
+                  }
+
+                                 
+              }
+               
+              cartArray.push(order);  //update the cart array with new entry
+              localStorage.setItem('cart',JSON.stringify(cartArray));     
+             
          }
+
           else {
            cartArray.push(order);
            localStorage.setItem('cart',JSON.stringify(cartArray));
          }
+         return false;
 
-       }    
+       },
+
+       remove: function(itemId){       
+          cartArray =  JSON.parse(localStorage.getItem('cart'));
+          for (var cr = 0; cr < cartArray.length; cr++) {
+            if (cartArray[cr].itemId === itemId) {
+            //alert(cr+'cr');
+            cartArray.splice(cr,1);
+            }
+          }
+          localStorage.setItem('cart',JSON.stringify(cartArray));
+        }    
 
 
-    };
+      };
+
+})
+
+.factory('Price',function(){
+ 
+  var subTotal = 0;
+
+ return{
+
+    set: function(cost){
+
+      if(localStorage.getItem('subTotal')!==null){
+           subTotal = parseInt(localStorage.getItem('subTotal'));  
+      }
+      else{
+           subTotal = 0;
+
+      }
+   
+        subTotal = parseInt(cost) + parseInt(subTotal);
+         localStorage.setItem('subTotal',subTotal);
+  
+
+    },
+
+    get : function(){
+
+         return localStorage.getItem('subTotal'); 
+    }
+
+
+
+ }
+  
+   
 
 });
 

@@ -1,18 +1,37 @@
 
 <ion-view view-title="Customizations">
-  <ion-content class="padding">
-   <ion-list>
+  <ion-content class="padding">  
 
- <ion-item>
-   <ion-textarea rows="4" cols="50">
-   </ion-textarea>
-  </ion-item>
+ 
 
-
-  
+ 
+     
    <ion-icon name="arrow-dropdown-circle"></ion-icon><ion-input type="text"></ion-input><ion-icon name="arrow-dropup-circle"></ion-icon>
-   <p>itemId={{itemId}}</p>
-    <button ion-button round ng-click="addToCart(itemId)" >Add to cart</button>
-  <ion-list>
+   
+
+    <div class="col text-center">
+   <h2>{{itemDetails.name}}</h2>
+    <img width="200" height="200" ng-src="{{itemDetails.img}}">
+   <p>{{itemDetails.details}}</p>
+    </div>
+
+    <label>Special Instructions : </label>
+    <label class="item item-input">
+      <textarea rows="4" cols="50">
+      </textarea>
+    </label>
+
+
+
+   <div class="col text-center" >
+   <h3>Quantity {{itemQuantity}}</h3>
+   </div>
+<div class="col text-center" >
+    <button class="button" ng-click="itemQuantityIncrement()" >+</button> 
+    <button class="button button-assertive"  ng-click="addToCart(itemId)">Add to cart ($ {{itemQuantity*itemDetails.cost}})</button>
+    <button class="button" ng-click="itemQuantityDecrement()" >-</button>
+ </div> 
+  
+
   </ion-content>
 </ion-view>

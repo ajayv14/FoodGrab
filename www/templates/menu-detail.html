@@ -3,10 +3,10 @@
     <ion-list>
           <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="menuItem in menuItems" type="item-text-wrap" href="#/tab/menu/{{menuItem.id}}/{{menuItem.item_Id}}">
                   
-        <img ng-src="{{menuItem.fac}}">
+        <img ng-src="{{menuItem.img}}">
         <h2>{{menuItem.name}}</h2>
-        <p>{{menuItem.lastText}}</p>
-    
+        <p>{{menuItem.details}}</p>
+        <p class="ion-right ">$ {{menuItem.cost}}</p>
 
         <i class="icon ion-chevron-right icon-accessory"></i>
         <ion-option-button class="button-assertive" ng-click="remove(chat)">
@@ -19,3 +19,4 @@
     </ion-list>
   </ion-content>
 </ion-view>
+  
