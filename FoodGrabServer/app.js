@@ -10,6 +10,23 @@ var users = require('./routes/users');
 
 var app = express();
 
+
+//Mongo db connection params
+var mongoose = require('mongoose');
+
+// Mongo db Connection URL
+var url = 'mongodb://localhost:27017/FoodGrab_test'; // / project name or DB Name
+mongoose.connect(url); // establish connection
+
+var Schema = mongoose.Schema;
+//Schema
+var orderSchema = new Schema({
+   order :[ {'itemId': String,'name': String,'itemQuantity':String,img:String,cost : String }]
+});
+
+var orders = mongoose.model('orders',orderSchema);
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -26,8 +43,6 @@ app.use('/', index);
 app.use('/users', users);
 
 
-
-
 app.post('/', function(request, response){
     console.log(request.body);      // your JSON
     response.send(request.body);    // echo the result back
@@ -37,6 +52,12 @@ app.post('/PlaceOrder', function(request, response){
     console.log(request.body);      // your JSON
     response.send(request.body);    // echo the result back
    // alert(request.body)
+  var newOrder = new orders(request.body);
+  newOrder.save(function (err) {
+    if (err) return handleError(err);
+    // saved!
+  });
+
 
 
 });

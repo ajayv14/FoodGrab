@@ -95,9 +95,13 @@ $scope.itemQuantityDecrement = function(){
 
   $scope.placeOrder = function(){
 
-    var url = 'http://localhost:3000/PlaceOrder';
+    var url = 'http://192.168.56.1:3000/PlaceOrder';
 
-   $http.post(url,JSON.stringify(Local.get()) ).then(function (res){
+  alert(Local.get());
+
+  var params =JSON.stringify({name:'ajay'});
+
+   $http.post(url,params).then(function (res){
             $scope.response = res.data;
         });
       
