@@ -17,7 +17,7 @@
 
     <label>Special Instructions : </label>
     <label class="item item-input">
-      <textarea rows="4" cols="50">
+      <textarea rows="4" cols="50" ng-model="splInstructions">
       </textarea>
     </label>
 
@@ -28,7 +28,7 @@
    </div>
 <div class="col text-center" >
     <button class="button" ng-click="itemQuantityIncrement()" >+</button> 
-    <button class="button button-assertive"  ng-click="addToCart(itemId)">Add to cart ($ {{itemQuantity*itemDetails.cost}})</button>
+    <button class="button button-assertive"  ng-click="addToCart(itemId,splInstructions)">Add to cart ($ {{itemQuantity*itemDetails.cost}})</button>
     <button class="button" ng-click="itemQuantityDecrement()" >-</button>
  </div> 
   

@@ -5,7 +5,12 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+
+var controllers = require('./controllers');
+var services = require('./services');
+require('aws-sdk');
+
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -92,7 +97,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-   .state('tab.item-confirmation', {
+   .state('tab.checkout-confirmation', {
     url: '/checkout/confirmation',
     views: {
       'tab-checkout': {

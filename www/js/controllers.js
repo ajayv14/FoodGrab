@@ -1,5 +1,7 @@
 angular.module('starter.controllers', [])
 
+
+
 .controller('TabCtrl', function($scope) {
     //default badge value
     $scope.$root.badgeCount = 0;
@@ -31,23 +33,17 @@ angular.module('starter.controllers', [])
   //alert('itemDetails'+$scope.itemDetails);
    $scope.itemQuantity = 1; // default quantity
 
-   $scope.addToCart = function(itemId){ 
+   $scope.addToCart = function(itemId,splInstructions){ 
 
-      var order = {'itemId': $scope.itemDetails.item_Id,'name':$scope.itemDetails.name,'itemQuantity':$scope.itemQuantity,img:$scope.itemDetails.img, cost :$scope.itemQuantity*$scope.itemDetails.cost };
-
-      //var orderCount = localStorage.getItem('orderCount'); 
-      //orderCount++;
-      //localStorage.setItem('orderCount',orderCount);
-      //alert('count'+orderCount);
-  
+      var order = {'itemId': $scope.itemDetails.item_Id,'name':$scope.itemDetails.name,'itemQuantity':$scope.itemQuantity,img:$scope.itemDetails.img, 'specialInstructions' :splInstructions, cost :$scope.itemQuantity*$scope.itemDetails.cost };
+     
      //compute and update total cost
        Price.set(order.cost);
 
       var redundantItem = false;
       redundantItem = Local.set(order);
       $scope.itemQuantity = '1';// set item quantity to default
-      //alert(Local.get());
-  
+      //alert(Local.get());  
     
       if(redundantItem == false) $scope.$root.badgeCount++;
         $location.path('/tab/menu');
@@ -55,14 +51,15 @@ angular.module('starter.controllers', [])
   };
 
 
-$scope.itemQuantityIncrement = function(){
-   $scope.itemQuantity++;
-};
+   $scope.itemQuantityIncrement = function(){
+       $scope.itemQuantity++;
+   };
 
-$scope.itemQuantityDecrement = function(){
-  if($scope.itemQuantity>1) $scope.itemQuantity--;
-};
-})
+   $scope.itemQuantityDecrement = function(){
+     if($scope.itemQuantity>1) $scope.itemQuantity--;
+   };
+
+ })
 
 .controller('AccountCtrl', function($scope) {
   $scope.settings = {
@@ -74,37 +71,70 @@ $scope.itemQuantityDecrement = function(){
 
  
   $scope.fullOrder = Local.get();
-  $scope.subCost = Price.get();
+  $scope.subCost = Price.getSubTotal();
+  $scope.totalCost = Price.getTotal();
 
   $scope.removeItem = function(itemId){
-    Local.remove(itemId);
-      $scope.fullOrder = Local.get();
-
-      //$scope.subCost = Price.get();
-
- 
-   //update order count
-   //var orderCount = localStorage.getItem('orderCount'); 
-   //orderCount--;
-   //localStorage.setItem('orderCount',orderCount); 
-   //alert('count'+orderCount);
-   $scope.$root.badgeCount--;
+   
+       Local.remove(itemId);
+       $scope.fullOrder = Local.get(); // update order
+       $scope.subCost = Price.getSubTotal();  //update subtotal
+       $scope.totalCost = Price.getTotal();
+       $scope.totalCost = Price.getTotal();
+       $scope.$root.badgeCount--;
     
   };
 
 
   $scope.placeOrder = function(){
 
-    var url = 'http://192.168.56.1:3000/PlaceOrder';
+       var url = 'http://192.168.56.1:3000/PlaceOrder';
+       alert(JSON.stringify(Local.get()));
 
-  alert(Local.get());
+  //var params =JSON.stringify([{'name':'ajay'}]);
 
-  var params =JSON.stringify({name:'ajay'});
-
-   $http.post(url,params).then(function (res){
-            $scope.response = res.data;
-        });
+  // $http.post(url,params).then(function (res){
+  //          $scope.response = res.data;
+  //      });
       
+       var dat = JSON.stringify(Local.get());
+
+
+       // mail
+      var aws = require('aws-sdk');
+      var ses = new aws.SES({"accessKeyId": "AKIAIBVA4NMDSLM3R4EA", "secretAccessKey": "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", "region": "us-west-2"});
+      var eparam = {
+                     Destination: {
+                        ToAddresses: ["ajay.v14@gmail.com"]
+                   },
+                     Message: {
+                        Body: {
+                          Html: {
+                                  Data: "<p>" +dat+ "</p>"
+                                },
+                          Text: {
+                                  Data: dat
+                                }
+                              },
+                        Subject: {
+                                  Data: "New Food Delivery Order"
+                                }
+                              },
+                        Source: "ajay.v14@gmail.com",
+                         ReplyToAddresses: ["ajay.v14@gmail.com"],
+                           ReturnPath: "ajay.v14@gmail.com"
+                    };
+ 
+
+
+
+                  ses.sendEmail(eparam, function (err, data) { 
+                    if (err) console.log(err);
+                         else console.log(data);
+                        });
+                  //Clear the car after order is placed
+                   Local.clear();
+                   $scope.$root.badgeCount = 0; // set badge count back to zero
 
  };
 

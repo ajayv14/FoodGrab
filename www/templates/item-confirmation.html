@@ -2,13 +2,30 @@
 <ion-view view-title="Confirmation">
  <ion-content class="padding">
 
-   <label>Phone Number</label>
+    <label>Name</label>
     <label class="item item-input">
-      <input type="text">
+      <input type="text" ng-model="customerName" >
    </label>
 
+   <label>Phone Number</label>
+    <label class="item item-input" >
+      <input type="text" ng-model="customerPhone">
+   </label>
+
+  <label>email</label>
+    <label class="item item-input">
+      <input type="text" ng-model="customerEmail">
+   </label>
+
+<label>Home Address</label>
+    <label class="item item-input">
+     <textarea rows="4" cols="50" ng-model="customerAddress">
+      </textarea>
+   </label>
+
+
  <div class="col text-center">
-   <a class="button button-assertive" ng-click="placeOrder()" >Place Order</a>
+   <a class="button button-assertive" ng-click="placeOrder()">Place Order</a>
   </div>
 
 

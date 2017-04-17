@@ -92,7 +92,7 @@ var menuItems = [{id: 0,items:
   };
 })
 
-.factory('Local',function(){ 
+.factory('Local',function(Price){ //Price to update subtotal 
 
   // local storage array
   var cartArray = []; 
@@ -140,13 +140,22 @@ var menuItems = [{id: 0,items:
           cartArray =  JSON.parse(localStorage.getItem('cart'));
           for (var cr = 0; cr < cartArray.length; cr++) {
             if (cartArray[cr].itemId === itemId) {
-            //alert(cr+'cr');
+               //alert(cr+'cr');
+               //get cost and update subtotal, then remove item
+               alert(-Math.abs(cartArray[cr].cost));
+
+           Price.set('-'+ cartArray[cr].cost);
             cartArray.splice(cr,1);
             }
           }
           localStorage.setItem('cart',JSON.stringify(cartArray));
-        }    
+        },
 
+       clear: function(){
+           localStorage.removeItem('cart');
+           localStorage.removeItem('Total');
+           localStorage.removeItem('subTotal');
+        }   
 
       };
 
@@ -155,28 +164,39 @@ var menuItems = [{id: 0,items:
 .factory('Price',function(){
  
   var subTotal = 0;
-
+  var tax = 10; // percentage of all taxes
+  var total = 0;
  return{
 
     set: function(cost){
 
       if(localStorage.getItem('subTotal')!==null){
-           subTotal = parseInt(localStorage.getItem('subTotal'));  
+           subTotal = parseFloat(localStorage.getItem('subTotal')); 
+           total = parseFloat(localStorage.getItem('Total')); 
       }
       else{
-           subTotal = 0;
+           subTotal = 0; total = 0;
+      }   
+        subTotal = parseFloat(cost) + parseFloat(subTotal);
+        localStorage.setItem('subTotal',subTotal);
 
-      }
-   
-        subTotal = parseInt(cost) + parseInt(subTotal);
-         localStorage.setItem('subTotal',subTotal);
-  
+        total = parseFloat(subTotal) + (parseFloat(tax)*0.01)*parseFloat(subTotal);
+         localStorage.setItem('Total',total);
+        
+        //Total amount after tax
 
-    },
 
-    get : function(){
+       
+
+      },
+
+    getSubTotal : function(){
 
          return localStorage.getItem('subTotal'); 
+    },
+
+    getTotal : function(){
+         return localStorage.getItem('Total'); 
     }
 
 
@@ -184,6 +204,32 @@ var menuItems = [{id: 0,items:
  }
   
    
+
+})
+
+.factory('Customer',function(){
+
+
+  return{
+
+        set : function(name,phone,email,address){         
+         
+
+        },
+
+        get : function(){
+
+
+        }
+
+       
+
+
+  }
+
+
+
+
 
 });
 
