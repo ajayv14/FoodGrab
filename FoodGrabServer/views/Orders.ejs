@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="app">
   <head>
     <title>FoodGrab</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -7,29 +7,30 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="Resource-type" content="Document" />
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="  crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
     <!-- Latest compiled and minified CSS Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-
+    <script src="controllers/ng-controller.js" type="text/javascript"></script>
 
   </head>
-  <body ng-controller="mainController">
+  <body ng-controller="ordersController">
     <h1>New Orders</h1>
     <p>Welcome </p>
-
+    <audio src="sounds/alert.mp3" loop id="audioAlert"></audio>
     <nav class="navbar navbar-fixed-top visible-lg visible-md">
       <div class="container-fluid">
         <div class="navbar-header " >
-          <a class="navbar-brand"style="font-family: sacramento,cursive; font-size:165%" href="#"><img src="/images/logo_Transparent.png"  Height="80" Width="200">            </a>
+          <a class="navbar-brand"style="font-family: sacramento,cursive; font-size:165%" href="#"><img src="/images/Fighter.png"  Height="80" Width="200">            </a>
         </div>
 
 
 
         <ul class="nav navbar-nav pull-right">
-          <li ><a href="#"><h3><i class="glyphicon glyphicon-home "></i> Orders</h3></a></li>
+          <li ><a href="#"><h3><i class="glyphicon glyphicon-home " ></i> Orders</h3></a></li>
           <li ><a href="#"><h3><i class="glyphicon glyphicon-fire "></i> In Progress</h3></a></li>
           <li ><a href="#"><h3><i class="glyphicon glyphicon-time "></i> Order History</h3></a></li>
 
@@ -58,12 +59,13 @@
       </thead>
 
       <tbody>
-      <tr scope="row" >
+      <tr scope="row" ng-repeat="order in allOrders"  ng-if="order.cost == '5'"
+          ng-init="playAudio()">
 
-        <td>1</td>
-        <td>Dummyval1</td>
-        <td>Dummyval1</td>
-        <td><button type="button" class="btn btn-success"><i class="glyphicon glyphicon-triangle-right"></i> View</button>
+        <td>{{order.name}}</td>
+        <td>{{order.itemId}}</td>
+        <td>{{order.cost}}</td>
+        <td><button type="button" class="btn btn-success" ng-click="pauseAudio()"><i class="glyphicon glyphicon-triangle-right"></i> View</button>
           <button type="button" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></button></td>
       </tr>
       </tbody>

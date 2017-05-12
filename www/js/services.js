@@ -142,7 +142,7 @@ var menuItems = [{id: 0,items:
             if (cartArray[cr].itemId === itemId) {
                //alert(cr+'cr');
                //get cost and update subtotal, then remove item
-               alert(-Math.abs(cartArray[cr].cost));
+              // alert(-Math.abs(cartArray[cr].cost));
 
            Price.set('-'+ cartArray[cr].cost);
             cartArray.splice(cr,1);

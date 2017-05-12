@@ -124562,7 +124562,7 @@ angular.module('starter.controllers', [])
 
 .controller('CheckoutCtrl', function($scope,Local,Price,$http) {
 
- 
+  $scope.refNumber = 'AJY-'+Math.random().toString(36).substring(7).toUpperCase();
   $scope.fullOrder = Local.get();
   $scope.subCost = Price.getSubTotal();
   $scope.totalCost = Price.getTotal();
@@ -124578,22 +124578,33 @@ angular.module('starter.controllers', [])
     
   };
 
-
-  $scope.placeOrder = function(){
+  $scope.placeOrder = function(customerEmail,customerPhone,customerAddress,customerName){
 
        var url = 'http://192.168.56.1:3000/PlaceOrder';
-       alert(JSON.stringify(Local.get()));
+//     alert(JSON.stringify(Local.get()));
+       var dat = Local.get();
 
-  //var params =JSON.stringify([{'name':'ajay'}]);
+       var HTMLdat = "";
 
-  // $http.post(url,params).then(function (res){
-  //          $scope.response = res.data;
+       for (var s = 0; s < dat.length; s++) {
+
+           
+
+          HTMLdat += "<p> ID : "+s.itemId+"</p>" +
+           "<p> Name : "+s.name+"</p>" +
+           "<p> Quantity : "+s.itemQuantity+"</p>" +
+           "<p> Special Instructions : "+s.specialInstructions+"</p>" +
+           "<p> Price : "+s.cost+"</p>";
+
+        }
+
+     // $http.post(url,dat).then(function (res){
+//              $scope.response = res.data;
   //      });
-      
-       var dat = JSON.stringify(Local.get());
 
 
-       // mail
+alert(HTMLdat);
+      // mail
       var aws = require('aws-sdk');
       var ses = new aws.SES({"accessKeyId": "AKIAIBVA4NMDSLM3R4EA", "secretAccessKey": "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", "region": "us-west-2"});
       var eparam = {
@@ -124603,14 +124614,23 @@ angular.module('starter.controllers', [])
                      Message: {
                         Body: {
                           Html: {
-                                  Data: "<p>" +dat+ "</p>"
+                                  Data: "<p>"+HTMLdat.toString()+"</p>" +
+                                         
+                                         "</br>" +
+
+                                   "<p> Customer Name : "+customerName+"<p>" +  "</br>" +
+
+                                    "<p> Phone Number : "+customerPhone+"<p>" +  "</br>" +
+
+                                     "<p> Delivery Address : "+customerAddress+"<p>" +  "</br>" 
+
                                 },
                           Text: {
                                   Data: dat
                                 }
                               },
                         Subject: {
-                                  Data: "New Food Delivery Order"
+                                  Data: "New Food Delivery Order - " + $scope.refNumber +" "
                                 }
                               },
                         Source: "ajay.v14@gmail.com",
@@ -124618,13 +124638,11 @@ angular.module('starter.controllers', [])
                            ReturnPath: "ajay.v14@gmail.com"
                     };
  
-
-
-
                   ses.sendEmail(eparam, function (err, data) { 
                     if (err) console.log(err);
                          else console.log(data);
                         });
+                 
                   //Clear the car after order is placed
                    Local.clear();
                    $scope.$root.badgeCount = 0; // set badge count back to zero
@@ -124784,7 +124802,7 @@ var menuItems = [{id: 0,items:
             if (cartArray[cr].itemId === itemId) {
                //alert(cr+'cr');
                //get cost and update subtotal, then remove item
-               alert(-Math.abs(cartArray[cr].cost));
+              // alert(-Math.abs(cartArray[cr].cost));
 
            Price.set('-'+ cartArray[cr].cost);
             cartArray.splice(cr,1);

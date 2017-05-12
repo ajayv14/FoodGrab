@@ -1,7 +1,5 @@
 angular.module('starter.controllers', [])
 
-
-
 .controller('TabCtrl', function($scope) {
     //default badge value
     $scope.$root.badgeCount = 0;
@@ -33,18 +31,18 @@ angular.module('starter.controllers', [])
   //alert('itemDetails'+$scope.itemDetails);
    $scope.itemQuantity = 1; // default quantity
 
-   $scope.addToCart = function(itemId,splInstructions){ 
+
+   $scope.addToCart = function(itemId,splInstructions){
 
       var order = {'itemId': $scope.itemDetails.item_Id,'name':$scope.itemDetails.name,'itemQuantity':$scope.itemQuantity,img:$scope.itemDetails.img, 'specialInstructions' :splInstructions, cost :$scope.itemQuantity*$scope.itemDetails.cost };
-     
-     //compute and update total cost
-       Price.set(order.cost);
+      //compute and update total cost
+      Price.set(order.cost);
 
       var redundantItem = false;
       redundantItem = Local.set(order);
       $scope.itemQuantity = '1';// set item quantity to default
-      //alert(Local.get());  
-    
+      //alert(Local.get());
+
       if(redundantItem == false) $scope.$root.badgeCount++;
         $location.path('/tab/menu');
 
@@ -69,38 +67,66 @@ angular.module('starter.controllers', [])
 
 .controller('CheckoutCtrl', function($scope,Local,Price,$http) {
 
- 
+  $scope.refNumber = 'AJY-'+Math.random().toString(36).substring(7).toUpperCase();
   $scope.fullOrder = Local.get();
   $scope.subCost = Price.getSubTotal();
   $scope.totalCost = Price.getTotal();
 
   $scope.removeItem = function(itemId){
-   
+
        Local.remove(itemId);
        $scope.fullOrder = Local.get(); // update order
        $scope.subCost = Price.getSubTotal();  //update subtotal
        $scope.totalCost = Price.getTotal();
        $scope.totalCost = Price.getTotal();
        $scope.$root.badgeCount--;
-    
+
   };
 
+  $scope.placeOrder = function(customerEmail,customerPhone,customerAddress,customerName){
 
-  $scope.placeOrder = function(){
+        
+       for (var r = 0; r < dat.length; r++) {
+
+           r.itemId
+            r.name
+             r.itemQuantity
+              r.specialInstructions
+               r.cost
+
+        }
+
+
+
+
+
+
 
        var url = 'http://192.168.56.1:3000/PlaceOrder';
-       alert(JSON.stringify(Local.get()));
+//     alert(JSON.stringify(Local.get()));
+       var dat = Local.get();
 
-  //var params =JSON.stringify([{'name':'ajay'}]);
+       var HTMLdat = "";
 
-  // $http.post(url,params).then(function (res){
-  //          $scope.response = res.data;
+       for (var s = 0; s < dat.length; s++) {
+
+
+
+          HTMLdat += "<p> ID : "+s.itemId+"</p>" +
+           "<p> Name : "+s.name+"</p>" +
+           "<p> Quantity : "+s.itemQuantity+"</p>" +
+           "<p> Special Instructions : "+s.specialInstructions+"</p>" +
+           "<p> Price : "+s.cost+"</p>";
+
+        }
+
+     // $http.post(url,dat).then(function (res){
+//              $scope.response = res.data;
   //      });
-      
-       var dat = JSON.stringify(Local.get());
 
 
-       // mail
+alert(HTMLdat);
+      // mail
       var aws = require('aws-sdk');
       var ses = new aws.SES({"accessKeyId": "AKIAIBVA4NMDSLM3R4EA", "secretAccessKey": "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", "region": "us-west-2"});
       var eparam = {
@@ -110,28 +136,35 @@ angular.module('starter.controllers', [])
                      Message: {
                         Body: {
                           Html: {
-                                  Data: "<p>" +dat+ "</p>"
+                                  Data: HTMLdat.toString() +
+
+                                         "</br>" +
+
+                                   "<p> Customer Name : "+customerName+"<p>" +  "</br>" +
+
+                                    "<p> Phone Number : "+customerPhone+"<p>" +  "</br>" +
+
+                                     "<p> Delivery Address : "+customerAddress+"<p>" +  "</br>"
+
                                 },
                           Text: {
                                   Data: dat
                                 }
                               },
                         Subject: {
-                                  Data: "New Food Delivery Order"
+                                  Data: "New Food Delivery Order - " + $scope.refNumber +" "
                                 }
                               },
                         Source: "ajay.v14@gmail.com",
                          ReplyToAddresses: ["ajay.v14@gmail.com"],
                            ReturnPath: "ajay.v14@gmail.com"
                     };
- 
 
-
-
-                  ses.sendEmail(eparam, function (err, data) { 
+                  ses.sendEmail(eparam, function (err, data) {
                     if (err) console.log(err);
                          else console.log(data);
                         });
+
                   //Clear the car after order is placed
                    Local.clear();
                    $scope.$root.badgeCount = 0; // set badge count back to zero
@@ -144,4 +177,3 @@ angular.module('starter.controllers', [])
 
 
 });
-
