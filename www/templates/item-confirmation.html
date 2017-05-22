@@ -1,47 +1,47 @@
 
 <ion-view view-title="Confirmation">
  <ion-content class="padding">
-
+<form>
     <ion-item>
       <ion-label>Name</ion-label>
       <label class="item item-input">
-        <input type="text" ng-model="customerName" >
+        <input type="text" ng-model="customerName" required >
       </label>
-    
-    
+
+
 
     <ion-label>Phone Number</ion-label>
     <label class="item item-input" >
-      <input type="text" ng-model="customerPhone">
+      <input type="text" ng-model="customerPhone" required>
    </label>
-  
+
 
   <ion-label>E-mail</ion-label>
     <label class="item item-input">
-      <input type="text" ng-model="customerEmail">
+      <input type="text" ng-model="customerEmail" required>
    </label>
 
 <ion-label>Home Address</ion-label>
     <label class="item item-input">
-     <textarea rows="4" cols="50" ng-model="customerAddress">
+     <textarea rows="4" cols="50" ng-model="customerAddress" >
       </textarea>
   </label>
 
  <ion-label>Order Number</ion-label>
-    <label class="item item-input">{{refNumber}} </label>
+    <label class="item item-input" ng-model="refNumber">{{refNumber}} </label>
 
 
   <ion-label>Total Amount Payable</ion-label>
     <label class="item item-input">$ {{totalCost}} </label>
 
-  
+
 
 
  <div class="col text-center">
-   <a class="button button-assertive" ng-click="placeOrder(customerEmail,customerPhone,customerAddress,customerName	)">Place Order</a>
+   <a class="button button-assertive" ng-click="placeOrder(customerEmail,customerPhone,customerAddress,customerName,refNumber	)">Place Order</a>
   </div>
 
  </ion-item>
-
+</form>
   </ion-content>
 </ion-view>

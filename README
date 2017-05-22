@@ -1,0 +1,9 @@
+
+
+GET :
+
+ /AllOrders    - To get all orders 
+
+POST :
+
+  /PlaceOrder   - To place a new order from cart

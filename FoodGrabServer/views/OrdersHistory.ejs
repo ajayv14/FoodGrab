@@ -7,21 +7,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="Resource-type" content="Document" />
-
     <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="  crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+
+    <script src="controllers/ng-controller.js" type="text/javascript"></script>
 
     <!-- Latest compiled and minified CSS Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-    <script src="../controllers/ng-controller.js" type="text/javascript"></script>
+    <script src="controllers/ng-controller.js" type="text/javascript"></script>
 
   </head>
-  <body ng-controller="orderdetailController">
+  <body ng-controller="ordersHistoryController">
 
-  <h2>Order Details </h2>
+  <h1>Orders History</h1>
+  <p>Welcome </p>
 
   <nav class="navbar navbar-fixed-top visible-lg visible-md">
     <div class="container-fluid">
@@ -38,60 +40,46 @@
 
 
 
+
       </ul>
 
     </div>
 
   </nav>
 
-  <h3>reference # : {{orderDetail.refNumber}}</h3>
-  <h4>Status : {{orderDetail.status}}</h4>
-
-    <div class="container">
-
-      
+  <div  class="text-center">
+    <h2>Closed Orders</h2>
+  </div>
 
 
-
-  <table  class="table" >
+  <div class="container">
+    <table  class="table" >
       <thead>
       <tr>
         <th>#</th>
-        <th>Item</th>
-        <th>Quantity</th>
-        <th>Special Instructions</th>
-        <th>Price</th>
+        <th>Order ref Number</th>
+        <th>Customer Name</th>
+        <th>Date</th>
+        <th>Status</th>
       </tr>
       </thead>
 
       <tbody>
-      <tr scope="row" ng-repeat="item in orderDetail.ordersItems" >
+      <tr scope="row" ng-repeat="order in closedOrders" >
 
         <td>{{$index}}</td>
-        <td>{{item.name}}</td>
-        <td>{{item.itemQuantity}}</td>
-        <td>{{item.specialInstructions}}</td>
-        <td>{{item.cost}}</td>
+        <td>{{order.refNumber}}</td>
+        <td>{{order.customerName}}</td>
+        <td></td>
+        <td>{{order.status}}</td>
+        <td><button type="button" class="btn btn-success" ng-click="viewOrderDetails(order.refNumber)"><i class="glyphicon glyphicon-triangle-right"></i> View</button>
+          <button type="button" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></button></td>
       </tr>
       </tbody>
     </table>
 
-      <div>
-        <p>Customer Name : {{orderDetail.customerName}}</p>
-        <p>Customer Phone : {{orderDetail.customerPhone}}</p>
-        <p>Customer Address : {{orderDetail.customerAddress}}</p>
-        <p>Date : {{orderDetail.date}}</p>
 
-
-      </div>
-
-   <div class="text-center">
-     <button type="button" class="btn btn-default" ng-click="confirmStatus(orderDetail.refNumber)"><i class="glyphicon glyphicon-ok"></i> Confirm</button>
-     <button type="button" class="btn btn-default" ng-click="completedStatus(orderDetail.refNumber)"><i class="glyphicon glyphicon-ok"></i> Completed</button>
-
-   </div>
-
-</div>
+  </div>
 
 
 

@@ -44,7 +44,7 @@ angular.module('starter.controllers', [])
       //alert(Local.get());
 
       if(redundantItem == false) $scope.$root.badgeCount++;
-        $location.path('/tab/menu');
+          $location.path('/tab/menu');
 
   };
 
@@ -65,10 +65,13 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('CheckoutCtrl', function($scope,Local,Price,$http) {
+.controller('CheckoutCtrl', function($scope,Local,Price,$http,$location) {
 
   $scope.refNumber = 'AJY-'+Math.random().toString(36).substring(7).toUpperCase();
   $scope.fullOrder = Local.get();
+  $scope.$root.badgeCount =   $scope.fullOrder.length;
+
+
   $scope.subCost = Price.getSubTotal();
   $scope.totalCost = Price.getTotal();
 
@@ -83,97 +86,32 @@ angular.module('starter.controllers', [])
 
   };
 
-  $scope.placeOrder = function(customerEmail,customerPhone,customerAddress,customerName){
+$scope.placeOrder = function(customerEmail,customerPhone,customerAddress,customerName,refNumber){
+  var orderData = Local.get();
+  var objData =  {
 
-        
-       for (var r = 0; r < dat.length; r++) {
+     ordersItems : orderData,
+      customerName : customerName,
+       customerPhone : customerPhone,
+        customerAddress : customerAddress,
+         customerEmail : customerEmail,
+           refNumber : refNumber
 
-           r.itemId
-            r.name
-             r.itemQuantity
-              r.specialInstructions
-               r.cost
-
-        }
-
-
+}
 
 
+  $http.post('http://localhost:3000/PlaceOrder',JSON.stringify(objData),function (err,res) {
+           if(err) console.log('post error' +err);
+      //     alert('thyank you, order submitted' + objData);
+    }).then(function(req,res){
+
+          $location.path('/tab/checkout/confirmation/thankYou');
 
 
-
-       var url = 'http://192.168.56.1:3000/PlaceOrder';
-//     alert(JSON.stringify(Local.get()));
-       var dat = Local.get();
-
-       var HTMLdat = "";
-
-       for (var s = 0; s < dat.length; s++) {
+    });
 
 
 
-          HTMLdat += "<p> ID : "+s.itemId+"</p>" +
-           "<p> Name : "+s.name+"</p>" +
-           "<p> Quantity : "+s.itemQuantity+"</p>" +
-           "<p> Special Instructions : "+s.specialInstructions+"</p>" +
-           "<p> Price : "+s.cost+"</p>";
-
-        }
-
-     // $http.post(url,dat).then(function (res){
-//              $scope.response = res.data;
-  //      });
-
-
-alert(HTMLdat);
-      // mail
-      var aws = require('aws-sdk');
-      var ses = new aws.SES({"accessKeyId": "AKIAIBVA4NMDSLM3R4EA", "secretAccessKey": "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", "region": "us-west-2"});
-      var eparam = {
-                     Destination: {
-                        ToAddresses: ["ajay.v14@gmail.com"]
-                   },
-                     Message: {
-                        Body: {
-                          Html: {
-                                  Data: HTMLdat.toString() +
-
-                                         "</br>" +
-
-                                   "<p> Customer Name : "+customerName+"<p>" +  "</br>" +
-
-                                    "<p> Phone Number : "+customerPhone+"<p>" +  "</br>" +
-
-                                     "<p> Delivery Address : "+customerAddress+"<p>" +  "</br>"
-
-                                },
-                          Text: {
-                                  Data: dat
-                                }
-                              },
-                        Subject: {
-                                  Data: "New Food Delivery Order - " + $scope.refNumber +" "
-                                }
-                              },
-                        Source: "ajay.v14@gmail.com",
-                         ReplyToAddresses: ["ajay.v14@gmail.com"],
-                           ReturnPath: "ajay.v14@gmail.com"
-                    };
-
-                  ses.sendEmail(eparam, function (err, data) {
-                    if (err) console.log(err);
-                         else console.log(data);
-                        });
-
-                  //Clear the car after order is placed
-                   Local.clear();
-                   $scope.$root.badgeCount = 0; // set badge count back to zero
-
- };
-
-
-
-
-
+};
 
 });

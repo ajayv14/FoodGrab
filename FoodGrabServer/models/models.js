@@ -4,17 +4,24 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var OrderSchema = new Schema({
+var itemsSchema = new Schema({
+  itemId : String,
+   name :String,
+    itemQuantity : String,
+     specialInstructions : String,
+      cost : String
 
-   itemId : String,
-    name :String,
-     itemQuantity : String,
-      specialInstructions : String,
-       cost : String,
+});
+
+var OrderSchema = new Schema({
+       ordersItems : [itemsSchema],
         customerName : String,
          customerPhone : String,
           customerAddress : String,
-           refNumber : String
+           customerEmail : String,
+           refNumber : String,
+            status : String,
+             date : Date
 
 });
 

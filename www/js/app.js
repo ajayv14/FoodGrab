@@ -81,13 +81,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',])
         'tab-menu': {
           templateUrl: 'templates/item-customization.html',
           controller:'CustomizationsCtrl'
-          
+
         }
       }
     })
 
   .state('tab.checkout', {
-    cache: false, // added to reload controller 
+    cache: false, // added to reload controller
     url: '/checkout',
     views: {
       'tab-checkout': {
@@ -103,6 +103,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',])
       'tab-checkout': {
         templateUrl: 'templates/item-confirmation.html',
         controller: 'CheckoutCtrl'
+      }
+    }
+  })
+
+  .state('tab.checkout-thankYou', {
+    cache: false, // added to reload controller
+    url: '/checkout/confirmation/thankYou',
+    views: {
+      'tab-checkout': {
+        templateUrl: 'templates/item-thankYou.html',
+        controller: ''
+      }
+    }
+  })
+
+  .state('tab.orders', {
+    url: '/orders',
+    views: {
+      'tab-orders': {
+        templateUrl: 'templates/tab-orders.html',
+        controller: ''
       }
     }
   });

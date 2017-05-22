@@ -34,7 +34,7 @@ app.use('/users', users);
 app.use(cors());
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header('Access-Control-Allow-Methods', 'DELETE, PUT');
+  res.header('Access-Control-Allow-Methods', 'POST','DELETE, PUT');
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
@@ -52,21 +52,20 @@ app.post('/PlaceOrder', function(req, res){
     console.log(req.body);      // your JSON
 
     models.Order.create({
-      itemId : req.body.itemId,
-       name : req.body.name,
-        itemQuantity :  req.body.itemQuantity,
-         specialInstructions :  req.body.specialInstructions,
-          cost :  req.body.cost,
+          ordersItems  : req.body.ordersItems,
            customerName :  req.body.customerName,
             customerPhone :  req.body.customerPhone,
              customerAddress :  req.body.customerAddress,
-              refNumber :  req.body.refNumber
+              customerEmail : req.body.customerEmail,
+              refNumber :  req.body.refNumber,
+               status : 'open',
+               date : Date.now()
 
-       },function(res,err){
+       },function(err,res){
           if(err) console.log('error occured' + err);
     });
 
-  res.send(req.body);    // echo the result back
+  res.send('Thanks ' +req.body.ordersItems);    // echo the result back
 });
 
 /*RETRIEVE- Order from database*/
@@ -80,6 +79,48 @@ app.get('/AllOrders',function(req,res){
 
 
 });
+
+
+/*NOT EXPOSED RETRIEVE- Specific Order from database*/
+app.get('/AllOrders/ref/:refNumber',function(req,res){
+
+  if(req.params.refNumber == '') refNumber = '';
+
+  models.Order.find({refNumber: req.params.refNumber},function(err,data){
+    if (err) console.log('RETRIEVE error' + err);
+    //console.log(data);
+    res.send(data[0]);
+  });
+});
+
+
+/*NOT EXPOSED RETRIEVE- Specific Order from database*/
+app.get('/AllOrders/status/:status',function(req,res){
+
+  //if(req.params.status == '') status = '';
+
+  models.Order.find({status: req.params.status},function(err,data){
+    if (err) console.log('RETRIEVE error' + err);
+    //console.log(data);
+    res.send(data);
+  });
+});
+
+
+/* Update Status -  new Order into database*/
+app.post('/UpdateOrderStatus', function(req, res){
+  //console.log(req.body);      // your JSON
+  models.Order.update({refNumber : req.body.refNumber},{
+        status : req.body.status
+
+  },{ multi: false },function(res,err){
+    if(err) console.log('error occured' + err);
+  });
+
+  res.send('Thanks ' +req.body.ordersItems);    // echo the result back
+});
+
+
 
 
 // catch 404 and forward to error handler

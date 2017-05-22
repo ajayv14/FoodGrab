@@ -124458,13 +124458,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',])
         'tab-menu': {
           templateUrl: 'templates/item-customization.html',
           controller:'CustomizationsCtrl'
-          
+
         }
       }
     })
 
   .state('tab.checkout', {
-    cache: false, // added to reload controller 
+    cache: false, // added to reload controller
     url: '/checkout',
     views: {
       'tab-checkout': {
@@ -124482,6 +124482,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',])
         controller: 'CheckoutCtrl'
       }
     }
+  })
+
+  .state('tab.checkout-thankYou', {
+    cache: false, // added to reload controller
+    url: '/checkout/confirmation/thankYou',
+    views: {
+      'tab-checkout': {
+        templateUrl: 'templates/item-thankYou.html',
+        controller: ''
+      }
+    }
+  })
+
+  .state('tab.orders', {
+    url: '/orders',
+    views: {
+      'tab-orders': {
+        templateUrl: 'templates/tab-orders.html',
+        controller: ''
+      }
+    }
   });
 
 
@@ -124492,8 +124513,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',])
 
 },{"./controllers":472,"./services":473,"aws-sdk":226}],472:[function(require,module,exports){
 angular.module('starter.controllers', [])
-
-
 
 .controller('TabCtrl', function($scope) {
     //default badge value
@@ -124526,20 +124545,20 @@ angular.module('starter.controllers', [])
   //alert('itemDetails'+$scope.itemDetails);
    $scope.itemQuantity = 1; // default quantity
 
-   $scope.addToCart = function(itemId,splInstructions){ 
+
+   $scope.addToCart = function(itemId,splInstructions){
 
       var order = {'itemId': $scope.itemDetails.item_Id,'name':$scope.itemDetails.name,'itemQuantity':$scope.itemQuantity,img:$scope.itemDetails.img, 'specialInstructions' :splInstructions, cost :$scope.itemQuantity*$scope.itemDetails.cost };
-     
-     //compute and update total cost
-       Price.set(order.cost);
+      //compute and update total cost
+      Price.set(order.cost);
 
       var redundantItem = false;
       redundantItem = Local.set(order);
       $scope.itemQuantity = '1';// set item quantity to default
-      //alert(Local.get());  
-    
+      //alert(Local.get());
+
       if(redundantItem == false) $scope.$root.badgeCount++;
-        $location.path('/tab/menu');
+          $location.path('/tab/menu');
 
   };
 
@@ -124560,104 +124579,58 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('CheckoutCtrl', function($scope,Local,Price,$http) {
+.controller('CheckoutCtrl', function($scope,Local,Price,$http,$location) {
 
   $scope.refNumber = 'AJY-'+Math.random().toString(36).substring(7).toUpperCase();
   $scope.fullOrder = Local.get();
+  $scope.$root.badgeCount =   $scope.fullOrder.length;
+
+
   $scope.subCost = Price.getSubTotal();
   $scope.totalCost = Price.getTotal();
 
   $scope.removeItem = function(itemId){
-   
+
        Local.remove(itemId);
        $scope.fullOrder = Local.get(); // update order
        $scope.subCost = Price.getSubTotal();  //update subtotal
        $scope.totalCost = Price.getTotal();
        $scope.totalCost = Price.getTotal();
        $scope.$root.badgeCount--;
-    
+
   };
 
-  $scope.placeOrder = function(customerEmail,customerPhone,customerAddress,customerName){
+$scope.placeOrder = function(customerEmail,customerPhone,customerAddress,customerName,refNumber){
+  var orderData = Local.get();
+  var objData =  {
 
-       var url = 'http://192.168.56.1:3000/PlaceOrder';
-//     alert(JSON.stringify(Local.get()));
-       var dat = Local.get();
+     ordersItems : orderData,
+      customerName : customerName,
+       customerPhone : customerPhone,
+        customerAddress : customerAddress,
+         customerEmail : customerEmail,
+           refNumber : refNumber
 
-       var HTMLdat = "";
-
-       for (var s = 0; s < dat.length; s++) {
-
-           
-
-          HTMLdat += "<p> ID : "+s.itemId+"</p>" +
-           "<p> Name : "+s.name+"</p>" +
-           "<p> Quantity : "+s.itemQuantity+"</p>" +
-           "<p> Special Instructions : "+s.specialInstructions+"</p>" +
-           "<p> Price : "+s.cost+"</p>";
-
-        }
-
-     // $http.post(url,dat).then(function (res){
-//              $scope.response = res.data;
-  //      });
+}
 
 
-alert(HTMLdat);
-      // mail
-      var aws = require('aws-sdk');
-      var ses = new aws.SES({"accessKeyId": "AKIAIBVA4NMDSLM3R4EA", "secretAccessKey": "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", "region": "us-west-2"});
-      var eparam = {
-                     Destination: {
-                        ToAddresses: ["ajay.v14@gmail.com"]
-                   },
-                     Message: {
-                        Body: {
-                          Html: {
-                                  Data: "<p>"+HTMLdat.toString()+"</p>" +
-                                         
-                                         "</br>" +
+  $http.post('http://localhost:3000/PlaceOrder',JSON.stringify(objData),function (err,res) {
+           if(err) console.log('post error' +err);
+      //     alert('thyank you, order submitted' + objData);
+    }).then(function(req,res){
 
-                                   "<p> Customer Name : "+customerName+"<p>" +  "</br>" +
+          $location.path('/tab/checkout/confirmation/thankYou');
 
-                                    "<p> Phone Number : "+customerPhone+"<p>" +  "</br>" +
 
-                                     "<p> Delivery Address : "+customerAddress+"<p>" +  "</br>" 
-
-                                },
-                          Text: {
-                                  Data: dat
-                                }
-                              },
-                        Subject: {
-                                  Data: "New Food Delivery Order - " + $scope.refNumber +" "
-                                }
-                              },
-                        Source: "ajay.v14@gmail.com",
-                         ReplyToAddresses: ["ajay.v14@gmail.com"],
-                           ReturnPath: "ajay.v14@gmail.com"
-                    };
- 
-                  ses.sendEmail(eparam, function (err, data) { 
-                    if (err) console.log(err);
-                         else console.log(data);
-                        });
-                 
-                  //Clear the car after order is placed
-                   Local.clear();
-                   $scope.$root.badgeCount = 0; // set badge count back to zero
-
- };
+    });
 
 
 
-
-
+};
 
 });
 
-
-},{"aws-sdk":226}],473:[function(require,module,exports){
+},{}],473:[function(require,module,exports){
 angular.module('starter.services', [])
 
 .factory('Menu', function() {
@@ -124689,7 +124662,7 @@ angular.module('starter.services', [])
     img: 'img/sampleIdlii.png'
   }];
 
-var menuItems = [{id: 0,items: 
+var menuItems = [{id: 0,items:
   [
     {id: 0,item_Id: 'm',name: 'Molaga bajji',details: 'spice warning',img: 'img/sampleIdlii.png',cost:'5.00'},
     {id: 0,item_Id: 'v', name: 'Vadai',details: 'deep fried donught shapped spicy dish',img: 'img/sampleIdlii.png',cost:'4.00'},
@@ -124697,8 +124670,8 @@ var menuItems = [{id: 0,items:
 
   ]
 
-  }, 
-{id: 1,items: 
+  },
+{id: 1,items:
   [
     {id: 1,item_Id: 'n',name: 'Paneer Butter Masala',details: 'spice warning',img: 'img/sampleIdlii.png',cost:'5.00'},
     {id: 1,item_Id: 'a', name: 'Paratha',details: 'deep fried donught shapped spicy dish',img: 'img/sampleIdlii.png',cost:'5.00'},
@@ -124706,9 +124679,9 @@ var menuItems = [{id: 0,items:
 
   ]
 
-  } 
+  }
 
-  ]; 
+  ];
 
   return {
 
@@ -124730,15 +124703,15 @@ var menuItems = [{id: 0,items:
 
     getSpecific: function(itemId) {
 
-      for (var i = 0; i < menuItems.length; i++) {        
-        
+      for (var i = 0; i < menuItems.length; i++) {
+
          for (j=0;j<menuItems[i].items.length;j++){
-                            
+
                if (menuItems[i].items[j].item_Id ==itemId) {
                       return menuItems[i].items[j];
                 }
 
-         } 
+         }
 
 
 
@@ -124748,44 +124721,45 @@ var menuItems = [{id: 0,items:
     }
 
 
-    
+
   };
 })
 
-.factory('Local',function(Price){ //Price to update subtotal 
+.factory('Local',function(Price){ //Price to update subtotal
 
   // local storage array
-  var cartArray = []; 
+  var cartArray = [];
 
     return {
 
-       get: function(){ 
+       get: function(){
           return JSON.parse(localStorage.getItem('cart'));
        },
 
        set: function(order){
 
           if(localStorage.getItem('cart')!==null){
-             cartArray.splice(0,cartArray.length); 
+             cartArray.splice(0,cartArray.length);
              cartArray = JSON.parse(localStorage.getItem('cart'));
-             
+
+
               for (var its = 0; its < cartArray.length; its++) {
-                  
+
                   if (cartArray[its].itemId === order.itemId) {
                     //  alert( order.itemId+'repeat item');
-                      cartArray[its].itemQuantity = parseInt(cartArray[its].itemQuantity) + parseInt(order.itemQuantity); 
+                      cartArray[its].itemQuantity = parseInt(cartArray[its].itemQuantity) + parseInt(order.itemQuantity);
                        cartArray[its].cost = parseInt(cartArray[its].cost) + parseInt(order.cost);
                    // cartArray.splice(cartArray.indexOf(order.itemId),1);
-                      localStorage.setItem('cart',JSON.stringify(cartArray));    
-                      return true;                      
+                      localStorage.setItem('cart',JSON.stringify(cartArray));
+                      return true;
                   }
 
-                                 
+
               }
-               
+
               cartArray.push(order);  //update the cart array with new entry
-              localStorage.setItem('cart',JSON.stringify(cartArray));     
-             
+              localStorage.setItem('cart',JSON.stringify(cartArray));
+
          }
 
           else {
@@ -124796,7 +124770,7 @@ var menuItems = [{id: 0,items:
 
        },
 
-       remove: function(itemId){       
+       remove: function(itemId){
           cartArray =  JSON.parse(localStorage.getItem('cart'));
           for (var cr = 0; cr < cartArray.length; cr++) {
             if (cartArray[cr].itemId === itemId) {
@@ -124815,14 +124789,14 @@ var menuItems = [{id: 0,items:
            localStorage.removeItem('cart');
            localStorage.removeItem('Total');
            localStorage.removeItem('subTotal');
-        }   
+        }
 
       };
 
 })
 
 .factory('Price',function(){
- 
+
   var subTotal = 0;
   var tax = 10; // percentage of all taxes
   var total = 0;
@@ -124831,39 +124805,39 @@ var menuItems = [{id: 0,items:
     set: function(cost){
 
       if(localStorage.getItem('subTotal')!==null){
-           subTotal = parseFloat(localStorage.getItem('subTotal')); 
-           total = parseFloat(localStorage.getItem('Total')); 
+           subTotal = parseFloat(localStorage.getItem('subTotal'));
+           total = parseFloat(localStorage.getItem('Total'));
       }
       else{
            subTotal = 0; total = 0;
-      }   
+      }
         subTotal = parseFloat(cost) + parseFloat(subTotal);
         localStorage.setItem('subTotal',subTotal);
 
         total = parseFloat(subTotal) + (parseFloat(tax)*0.01)*parseFloat(subTotal);
          localStorage.setItem('Total',total);
-        
+
         //Total amount after tax
 
 
-       
+
 
       },
 
     getSubTotal : function(){
 
-         return localStorage.getItem('subTotal'); 
+         return localStorage.getItem('subTotal');
     },
 
     getTotal : function(){
-         return localStorage.getItem('Total'); 
+         return localStorage.getItem('Total');
     }
 
 
 
  }
-  
-   
+
+
 
 })
 
@@ -124872,8 +124846,8 @@ var menuItems = [{id: 0,items:
 
   return{
 
-        set : function(name,phone,email,address){         
-         
+        set : function(name,phone,email,address){
+
 
         },
 
@@ -124882,7 +124856,7 @@ var menuItems = [{id: 0,items:
 
         }
 
-       
+
 
 
   }
@@ -124892,9 +124866,5 @@ var menuItems = [{id: 0,items:
 
 
 });
-
-
-
-
 
 },{}]},{},[471]);

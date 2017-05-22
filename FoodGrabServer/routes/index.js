@@ -7,14 +7,29 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET Orders page. */
-router.get('/Orders', function(req, res, next) {
-  res.render('Orders', { title: 'Orders' });
+router.get('/CurrentOrders', function(req, res, next) {
+  res.render('CurrentOrders', { title: 'Orders' });
 });
+
+/* GET Orders page. */
+router.get('/OrdersInProgress', function(req, res, next) {
+  res.render('OrdersInProgress', { title: 'Orders' });
+});
+
+router.get('/OrdersHistory', function(req, res, next) {
+  res.render('OrdersHistory', { title: 'Orders History' });
+});
+
+
 
 /* GET Order Details page. */
 router.get('/OrderDetails', function(req, res, next) {
   res.render('OrderDetails', { title: 'Order Details' });
 });
 
+/* GET Specific Order Details page. */
+router.get('/OrderDetails/:refNumber', function(req, res, next) {
+  res.render('OrderDetails', {});
+});
 
 module.exports = router;

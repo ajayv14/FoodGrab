@@ -29,7 +29,7 @@ angular.module('starter.services', [])
     img: 'img/sampleIdlii.png'
   }];
 
-var menuItems = [{id: 0,items: 
+var menuItems = [{id: 0,items:
   [
     {id: 0,item_Id: 'm',name: 'Molaga bajji',details: 'spice warning',img: 'img/sampleIdlii.png',cost:'5.00'},
     {id: 0,item_Id: 'v', name: 'Vadai',details: 'deep fried donught shapped spicy dish',img: 'img/sampleIdlii.png',cost:'4.00'},
@@ -37,8 +37,8 @@ var menuItems = [{id: 0,items:
 
   ]
 
-  }, 
-{id: 1,items: 
+  },
+{id: 1,items:
   [
     {id: 1,item_Id: 'n',name: 'Paneer Butter Masala',details: 'spice warning',img: 'img/sampleIdlii.png',cost:'5.00'},
     {id: 1,item_Id: 'a', name: 'Paratha',details: 'deep fried donught shapped spicy dish',img: 'img/sampleIdlii.png',cost:'5.00'},
@@ -46,9 +46,9 @@ var menuItems = [{id: 0,items:
 
   ]
 
-  } 
+  }
 
-  ]; 
+  ];
 
   return {
 
@@ -70,15 +70,15 @@ var menuItems = [{id: 0,items:
 
     getSpecific: function(itemId) {
 
-      for (var i = 0; i < menuItems.length; i++) {        
-        
+      for (var i = 0; i < menuItems.length; i++) {
+
          for (j=0;j<menuItems[i].items.length;j++){
-                            
+
                if (menuItems[i].items[j].item_Id ==itemId) {
                       return menuItems[i].items[j];
                 }
 
-         } 
+         }
 
 
 
@@ -88,44 +88,45 @@ var menuItems = [{id: 0,items:
     }
 
 
-    
+
   };
 })
 
-.factory('Local',function(Price){ //Price to update subtotal 
+.factory('Local',function(Price){ //Price to update subtotal
 
   // local storage array
-  var cartArray = []; 
+  var cartArray = [];
 
     return {
 
-       get: function(){ 
+       get: function(){
           return JSON.parse(localStorage.getItem('cart'));
        },
 
        set: function(order){
 
           if(localStorage.getItem('cart')!==null){
-             cartArray.splice(0,cartArray.length); 
+             cartArray.splice(0,cartArray.length);
              cartArray = JSON.parse(localStorage.getItem('cart'));
-             
+
+
               for (var its = 0; its < cartArray.length; its++) {
-                  
+
                   if (cartArray[its].itemId === order.itemId) {
                     //  alert( order.itemId+'repeat item');
-                      cartArray[its].itemQuantity = parseInt(cartArray[its].itemQuantity) + parseInt(order.itemQuantity); 
+                      cartArray[its].itemQuantity = parseInt(cartArray[its].itemQuantity) + parseInt(order.itemQuantity);
                        cartArray[its].cost = parseInt(cartArray[its].cost) + parseInt(order.cost);
                    // cartArray.splice(cartArray.indexOf(order.itemId),1);
-                      localStorage.setItem('cart',JSON.stringify(cartArray));    
-                      return true;                      
+                      localStorage.setItem('cart',JSON.stringify(cartArray));
+                      return true;
                   }
 
-                                 
+
               }
-               
+
               cartArray.push(order);  //update the cart array with new entry
-              localStorage.setItem('cart',JSON.stringify(cartArray));     
-             
+              localStorage.setItem('cart',JSON.stringify(cartArray));
+
          }
 
           else {
@@ -136,7 +137,7 @@ var menuItems = [{id: 0,items:
 
        },
 
-       remove: function(itemId){       
+       remove: function(itemId){
           cartArray =  JSON.parse(localStorage.getItem('cart'));
           for (var cr = 0; cr < cartArray.length; cr++) {
             if (cartArray[cr].itemId === itemId) {
@@ -155,14 +156,14 @@ var menuItems = [{id: 0,items:
            localStorage.removeItem('cart');
            localStorage.removeItem('Total');
            localStorage.removeItem('subTotal');
-        }   
+        }
 
       };
 
 })
 
 .factory('Price',function(){
- 
+
   var subTotal = 0;
   var tax = 10; // percentage of all taxes
   var total = 0;
@@ -171,39 +172,39 @@ var menuItems = [{id: 0,items:
     set: function(cost){
 
       if(localStorage.getItem('subTotal')!==null){
-           subTotal = parseFloat(localStorage.getItem('subTotal')); 
-           total = parseFloat(localStorage.getItem('Total')); 
+           subTotal = parseFloat(localStorage.getItem('subTotal'));
+           total = parseFloat(localStorage.getItem('Total'));
       }
       else{
            subTotal = 0; total = 0;
-      }   
+      }
         subTotal = parseFloat(cost) + parseFloat(subTotal);
         localStorage.setItem('subTotal',subTotal);
 
         total = parseFloat(subTotal) + (parseFloat(tax)*0.01)*parseFloat(subTotal);
          localStorage.setItem('Total',total);
-        
+
         //Total amount after tax
 
 
-       
+
 
       },
 
     getSubTotal : function(){
 
-         return localStorage.getItem('subTotal'); 
+         return localStorage.getItem('subTotal');
     },
 
     getTotal : function(){
-         return localStorage.getItem('Total'); 
+         return localStorage.getItem('Total');
     }
 
 
 
  }
-  
-   
+
+
 
 })
 
@@ -212,8 +213,8 @@ var menuItems = [{id: 0,items:
 
   return{
 
-        set : function(name,phone,email,address){         
-         
+        set : function(name,phone,email,address){
+
 
         },
 
@@ -222,7 +223,7 @@ var menuItems = [{id: 0,items:
 
         }
 
-       
+
 
 
   }
@@ -232,7 +233,3 @@ var menuItems = [{id: 0,items:
 
 
 });
-
-
-
-
