@@ -1,6 +1,7 @@
 angular.module('starter.services', [])
 
 .factory('Menu', function() {
+
   // Might use a resource here that returns a JSON array
   var cusine = [{
     id: 0,
@@ -100,7 +101,10 @@ var menuItems = [{id: 0,items:
     return {
 
        get: function(){
-          return JSON.parse(localStorage.getItem('cart'));
+
+          if(localStorage.getItem('cart')) return localStorage.getItem('cart');
+          else return '';
+
        },
 
        set: function(order){
@@ -153,9 +157,15 @@ var menuItems = [{id: 0,items:
         },
 
        clear: function(){
-           localStorage.removeItem('cart');
-           localStorage.removeItem('Total');
-           localStorage.removeItem('subTotal');
+          // localStorage.removeItem('cart');
+        //   localStorage.removeItem('Total');
+        //   localStorage.removeItem('subTotal');
+           localStorage.setItem('cart',[]);
+           localStorage.setItem('Total','0');
+           localStorage.setItem('subTotal','0');
+
+
+
         }
 
       };
@@ -193,11 +203,17 @@ var menuItems = [{id: 0,items:
 
     getSubTotal : function(){
 
-         return localStorage.getItem('subTotal');
+               if(localStorage.getItem('subTotal')) return localStorage.getItem('subTotal');
+
+               else return '0' ;
     },
 
     getTotal : function(){
-         return localStorage.getItem('Total');
+         if(localStorage.getItem('Total')) return localStorage.getItem('Total');
+
+         else return '0'
+
+
     }
 
 

@@ -124476,6 +124476,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',])
 
    .state('tab.checkout-confirmation', {
     url: '/checkout/confirmation',
+      cache: false, // added to reload controller
     views: {
       'tab-checkout': {
         templateUrl: 'templates/item-confirmation.html',
@@ -124496,11 +124497,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',])
   })
 
   .state('tab.orders', {
+  cache: false,
     url: '/orders',
     views: {
       'tab-orders': {
         templateUrl: 'templates/tab-orders.html',
-        controller: ''
+        controller: 'OrdersCtrl'
       }
     }
   });
@@ -124579,7 +124581,7 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('CheckoutCtrl', function($scope,Local,Price,$http,$location) {
+.controller('CheckoutCtrl', function($scope,Local,Price,$http,$location,$ionicHistory) {
 
   $scope.refNumber = 'AJY-'+Math.random().toString(36).substring(7).toUpperCase();
   $scope.fullOrder = Local.get();
@@ -124600,7 +124602,7 @@ angular.module('starter.controllers', [])
 
   };
 
-$scope.placeOrder = function(customerEmail,customerPhone,customerAddress,customerName,refNumber){
+   $scope.placeOrder = function(customerEmail,customerPhone,customerAddress,customerName,refNumber){
   var orderData = Local.get();
   var objData =  {
 
@@ -124612,21 +124614,62 @@ $scope.placeOrder = function(customerEmail,customerPhone,customerAddress,custome
            refNumber : refNumber
 
 }
+    /*Local Storage Session to store email /phone */
+     localStorage.removeItem('customerEmail');
+     localStorage.removeItem('customerPhone');
+
+     if(customerEmail=='') {
+          localStorage.setItem('customerEmail','none');
+     }
+     else {
+           localStorage.setItem('customerEmail',customerEmail);
+     }
+
+     if(customerPhone=='') {
+            localStorage.setItem('customerPhone','none');
+     }
+     else {
+             localStorage.setItem('customerPhone',customerPhone);
+     }
 
 
-  $http.post('http://localhost:3000/PlaceOrder',JSON.stringify(objData),function (err,res) {
+
+
+       $http.post('http://localhost:3000/PlaceOrder',JSON.stringify(objData),function (err,res) {
            if(err) console.log('post error' +err);
       //     alert('thyank you, order submitted' + objData);
     }).then(function(req,res){
-
-          $location.path('/tab/checkout/confirmation/thankYou');
+           /*Clear Cart*/
+           Local.clear();
+          //$ionicHistory.clearCache();
+          $location.path('/tab/orders');
 
 
     });
 
-
-
 };
+
+})
+
+.controller('OrdersCtrl', function($scope,$http) {
+
+    if(localStorage.getItem('customerEmail')!=='none'){
+         var emailURL = 'http://localhost:3000/AllOrders/email/'+localStorage.getItem('customerEmail');
+         $http.get(emailURL).then(function (res) {
+             $scope.orders = res.data;
+          });
+    }
+
+    else if (localStorage.getItem('customerPhone')!=='none') {
+       var phoneURL = 'http://localhost:3000/AllOrders/phone/'+localStorage.getItem('customerPhone');
+      $http.get(phoneURL).then(function (res) {
+          $scope.orders = res.data;
+       });
+    }
+
+    else $scope.displayInputFlagRet = 'true';
+
+
 
 });
 
@@ -124634,6 +124677,12 @@ $scope.placeOrder = function(customerEmail,customerPhone,customerAddress,custome
 angular.module('starter.services', [])
 
 .factory('Menu', function() {
+
+  localStorage.setItem('cart',[]);
+  localStorage.setItem('Total','0');
+  localStorage.setItem('subTotal','0');
+
+
   // Might use a resource here that returns a JSON array
   var cusine = [{
     id: 0,
@@ -124786,9 +124835,15 @@ var menuItems = [{id: 0,items:
         },
 
        clear: function(){
-           localStorage.removeItem('cart');
-           localStorage.removeItem('Total');
-           localStorage.removeItem('subTotal');
+          // localStorage.removeItem('cart');
+        //   localStorage.removeItem('Total');
+        //   localStorage.removeItem('subTotal');
+           localStorage.setItem('cart',[]);
+           localStorage.setItem('Total','0');
+           localStorage.setItem('subTotal','0');
+
+
+
         }
 
       };

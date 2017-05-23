@@ -1,5 +1,5 @@
 <ion-view view-title="Checkout">
-  
+
 
 <ion-content>
 <ion-item>
@@ -7,28 +7,26 @@
 </ion-item>
     <ion-list>
      <ion-item class="item-remove-animate item-avatar " ng-repeat="order in fullOrder" type="item-text-wrap">
-        <img ng-src="{{order.img}}">         
-        <h2>{{order.name}}</h2>  
-        <p ">Qnt : {{order.itemQuantity}}</p> 
-        <p>$ {{order.cost}}</p>  
-        <button class="button button-small text-right" ng-click="removeItem(order.itemId)" >- </button>            
+        <img ng-src="{{order.img}}">
+        <h2>{{order.name}}</h2>
+        <p ">Qnt : {{order.itemQuantity}}</p>
+        <p>$ {{order.cost}}</p>
+        <button class="button button-small text-right" ng-click="removeItem(order.itemId)" >- </button>
       </ion-item>
     </ion-list>
-  
-    <ion-item>
-      <p class="text-right">Subtotal $ {{subCost}}</p>
-    </ion-item> 
 
     <ion-item>
-      <p  class="text-right">Total (after tax) $ {{totalCost}}</p>
+      <p class="text-right">Subtotal $ {{subCost | limitTo : 5}}</p>
+    </ion-item>
+
+    <ion-item>
+      <p  class="text-right">Total (after tax) $ {{totalCost | limitTo : 5}}</p>
     </ion-item>
 
   <div class="col text-center">
-   <a class="button button-assertive"  href="#/tab/checkout/confirmation">Continue Checkout</a>
+   <a class="button button-assertive"  href="#/tab/checkout/confirmation" ng-hide="totalCost=='0'">Continue Checkout</a>
   </div>
 
-
-
   </ion-content>
-   
+
 </ion-view>

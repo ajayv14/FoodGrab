@@ -1,14 +1,17 @@
 
 <ion-view view-title="Orders">
  <ion-content class="padding">
-<form>
-    <ion-item>
-      <ion-label>Name</ion-label>
-      <label class="item item-input">
-        <input type="text" ng-model="customerName" required >
-      </label>
 
- </ion-item>
-</form>
+   <ion-list>
+    <ion-item  ng-repeat="order in orders  | orderBy :'+' : true | limitTo : 5" type="item-text-wrap">
+      <h2>Order # : {{order.refNumber}}</h2>
+      <P>Status : {{order.status}}</p>
+      <P>Date : {{order.date | limitTo : 10}}</p>
+        <P>Time : {{order.date | limitTo : 5 : 11}}</p>
+
+     </ion-item>
+   </ion-list>
+
+
   </ion-content>
 </ion-view>

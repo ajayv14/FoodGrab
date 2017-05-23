@@ -6,11 +6,13 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 
-var controllers = require('./controllers');
-var services = require('./services');
-require('aws-sdk');
+//var controllers = require('./controllers');
+//var services = require('./services');
+//require('aws-sdk');
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',])
+//angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',])
+angular.module('starter', ['ionic','starter.controllers', 'starter.services'])
+
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -35,6 +37,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',])
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
+
 
   // setup an abstract state for the tabs directive
     .state('tab', {
@@ -99,6 +102,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',])
 
    .state('tab.checkout-confirmation', {
     url: '/checkout/confirmation',
+      cache: false, // added to reload controller
     views: {
       'tab-checkout': {
         templateUrl: 'templates/item-confirmation.html',
@@ -119,11 +123,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',])
   })
 
   .state('tab.orders', {
+  cache: false,
     url: '/orders',
     views: {
       'tab-orders': {
         templateUrl: 'templates/tab-orders.html',
-        controller: ''
+        controller: 'OrdersCtrl'
       }
     }
   });

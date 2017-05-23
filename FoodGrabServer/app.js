@@ -13,7 +13,7 @@ var users = require('./routes/users');
 
 var app = express();
 
-mongoose.connect('mongodb://ajay:ajay@ds137891.mlab.com:37891/foodgrab');
+mongoose.connect('mongodb://ajay:ajay@68.66.193.148:27017/foodgrab',{auth: {authdb:'admin'}});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -92,6 +92,26 @@ app.get('/AllOrders/ref/:refNumber',function(req,res){
     res.send(data[0]);
   });
 });
+
+/*NOT EXPOSED RETRIEVE- Specific Order from database*/
+app.get('/AllOrders/email/:customerEmail',function(req,res){
+   models.Order.find({customerEmail: req.params.customerEmail},function(err,data){
+    if (err) console.log('RETRIEVE error' + err);
+    //console.log(data);
+    res.send(data);
+  });
+});
+
+
+/*NOT EXPOSED RETRIEVE- Specific Order from database*/
+app.get('/AllOrders/phone/:customerPhone',function(req,res){
+  models.Order.find({customerPhone: req.params.customerPhone},function(err,data){
+    if (err) console.log('RETRIEVE error' + err);
+    //console.log(data);
+    res.send(data);
+  });
+});
+
 
 
 /*NOT EXPOSED RETRIEVE- Specific Order from database*/
