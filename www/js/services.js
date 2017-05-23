@@ -101,11 +101,9 @@ var menuItems = [{id: 0,items:
     return {
 
        get: function(){
-
-          if(localStorage.getItem('cart')) return localStorage.getItem('cart');
+          if(localStorage.getItem('cart')) return JSON.parse(localStorage.getItem('cart'));
           else return '';
-
-       },
+        },
 
        set: function(order){
 
@@ -157,12 +155,12 @@ var menuItems = [{id: 0,items:
         },
 
        clear: function(){
-          // localStorage.removeItem('cart');
-        //   localStorage.removeItem('Total');
-        //   localStorage.removeItem('subTotal');
-           localStorage.setItem('cart',[]);
-           localStorage.setItem('Total','0');
-           localStorage.setItem('subTotal','0');
+           localStorage.removeItem('cart');
+          localStorage.removeItem('Total');
+           localStorage.removeItem('subTotal');
+          // localStorage.setItem('cart',[]);
+          // localStorage.setItem('Total','0');
+        //   localStorage.setItem('subTotal','0');
 
 
 

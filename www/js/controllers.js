@@ -71,7 +71,8 @@ angular.module('starter.controllers', [])
 
   $scope.refNumber = 'AJY-'+Math.random().toString(36).substring(7).toUpperCase();
   $scope.fullOrder = Local.get();
-  $scope.$root.badgeCount =   $scope.fullOrder.length;
+  //alert( $scope.fullOrder.length + Local.get());
+  $scope.$root.badgeCount = $scope.fullOrder.length;
 
 
   $scope.subCost = Price.getSubTotal();
@@ -121,7 +122,7 @@ angular.module('starter.controllers', [])
 
 
 
-       $http.post('http://localhost:3000/PlaceOrder',JSON.stringify(objData),function (err,res) {
+       $http.post('http://10.0.0.185:3000/PlaceOrder',JSON.stringify(objData),function (err,res) {
            if(err) console.log('post error' +err);
       //     alert('thyank you, order submitted' + objData);
     }).then(function(req,res){
@@ -140,14 +141,14 @@ angular.module('starter.controllers', [])
 .controller('OrdersCtrl', function($scope,$http) {
 
     if(localStorage.getItem('customerEmail')!=='none'){
-         var emailURL = 'http://localhost:3000/AllOrders/email/'+localStorage.getItem('customerEmail');
+         var emailURL = 'http://10.0.0.185:3000/AllOrders/email/'+localStorage.getItem('customerEmail');
          $http.get(emailURL).then(function (res) {
              $scope.orders = res.data;
           });
     }
 
     else if (localStorage.getItem('customerPhone')!=='none') {
-       var phoneURL = 'http://localhost:3000/AllOrders/phone/'+localStorage.getItem('customerPhone');
+       var phoneURL = 'http://10.0.0.185:3000/AllOrders/phone/'+localStorage.getItem('customerPhone');
       $http.get(phoneURL).then(function (res) {
           $scope.orders = res.data;
        });
