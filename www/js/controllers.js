@@ -69,7 +69,7 @@ angular.module('starter.controllers', [])
 
 .controller('CheckoutCtrl', function($scope,Local,Price,$http,$location,$ionicHistory) {
 
-  $scope.refNumber = 'AJY-'+Math.random().toString(36).substring(7).toUpperCase();
+  $scope.refNumber = 'AJY-'+Math.random().toString(36).substring(2,8).toUpperCase();
   $scope.fullOrder = Local.get();
   //alert( $scope.fullOrder.length + Local.get());
   $scope.$root.badgeCount = $scope.fullOrder.length;
@@ -77,6 +77,8 @@ angular.module('starter.controllers', [])
 
   $scope.subCost = Price.getSubTotal();
   $scope.totalCost = Price.getTotal();
+
+   if($scope.totalCost==0)   $scope.submitFlag= true;
 
   $scope.removeItem = function(itemId){
 
@@ -122,13 +124,15 @@ angular.module('starter.controllers', [])
 
 
 
-       $http.post('http://10.0.0.185:3000/PlaceOrder',JSON.stringify(objData),function (err,res) {
+       $http.post('http://68.66.193.148:3000/PlaceOrder',JSON.stringify(objData),function (err,res) {
            if(err) console.log('post error' +err);
       //     alert('thyank you, order submitted' + objData);
     }).then(function(req,res){
+        $scope.submitFlag= true;
            /*Clear Cart*/
            Local.clear();
           //$ionicHistory.clearCache();
+
           $location.path('/tab/orders');
 
 
@@ -141,14 +145,14 @@ angular.module('starter.controllers', [])
 .controller('OrdersCtrl', function($scope,$http) {
 
     if(localStorage.getItem('customerEmail')!=='none'){
-         var emailURL = 'http://10.0.0.185:3000/AllOrders/email/'+localStorage.getItem('customerEmail');
+         var emailURL = 'http://68.66.193.148:3000/AllOrders/email/'+localStorage.getItem('customerEmail');
          $http.get(emailURL).then(function (res) {
              $scope.orders = res.data;
           });
     }
 
     else if (localStorage.getItem('customerPhone')!=='none') {
-       var phoneURL = 'http://10.0.0.185:3000/AllOrders/phone/'+localStorage.getItem('customerPhone');
+       var phoneURL = 'http://68.66.193.148:3000/AllOrders/phone/'+localStorage.getItem('customerPhone');
       $http.get(phoneURL).then(function (res) {
           $scope.orders = res.data;
        });

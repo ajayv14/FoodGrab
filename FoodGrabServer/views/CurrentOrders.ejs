@@ -49,24 +49,26 @@
 
 
     <div class="container">
-    <table  class="table" >
+    <table  class="table table-inverse" >
       <thead>
       <tr>
         <th>#</th>
         <th>Order ref Number</th>
         <th>Customer Name</th>
         <th>Date</th>
+        <th>Time</th>
         <th>Status</th>
       </tr>
       </thead>
 
       <tbody>
-      <tr scope="row" ng-repeat="order in allOrders"  ng-if="order.status == 'open'" ng-init="playAudio()">
+      <tr scope="row" ng-repeat="order in allOrders | orderBy :'+' : true"  ng-if="order.status == 'open'" ng-init="playAudio()">
 
-        <td>{{$index}}</td>
+        <td>{{$index+1}}</td>
         <td>{{order.refNumber}}</td>
         <td>{{order.customerName}}</td>
-        <td></td>
+        <td>{{order.date | limitTo : 10}}</td>
+        <td> {{order.date | limitTo : 5 : 11}}</td>
         <td>{{order.status}}</td>
         <td><button type="button" class="btn btn-success" ng-click="viewOrderDetails(order.refNumber)"><i class="glyphicon glyphicon-triangle-right"></i> View</button>
           <button type="button" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></button></td>

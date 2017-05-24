@@ -32,13 +32,13 @@
 
 
   <ion-label>Total Amount Payable</ion-label>
-    <label class="item item-input">$ {{totalCost}} </label>
+    <label class="item item-input">$ {{totalCost | limitTo : 5}} </label>
 
 
 
 
  <div class="col text-center">
-   <a class="button button-assertive" ng-click="placeOrder(customerEmail,customerPhone,customerAddress,customerName,refNumber	)">Place Order</a>
+   <a class="button button-assertive" ng-click="placeOrder(customerEmail,customerPhone,customerAddress,customerName,refNumber	)"  ng-disabled="submitFlag">Place Order</a>
   </div>
 
  </ion-item>

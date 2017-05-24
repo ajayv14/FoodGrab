@@ -35,39 +35,61 @@
         <li ><a href="/CurrentOrders"><h3><i class="glyphicon glyphicon-home " ></i> Orders</h3></a></li>
         <li ><a href="/OrdersInProgress"><h3><i class="glyphicon glyphicon-fire "></i> In Progress</h3></a></li>
         <li ><a href="/OrdersHistory"><h3><i class="glyphicon glyphicon-time "></i> Order History</h3></a></li>
-
-
-
       </ul>
 
     </div>
 
   </nav>
 
-  <h3>reference # : {{orderDetail.refNumber}}</h3>
-  <h4>Status : {{orderDetail.status}}</h4>
 
-    <div class="container">
 
-      <div class="progress">
-        <div class="progress-bar progress-bar-danger" role="progressbar" style="width:10%">
-          NOT CONFIRMED
-        </div>
-        <div class="progress-bar progress-bar-warning" role="progressbar" style="width:20%">
-          CONFIRMED
-        </div>
-        <div class="progress-bar progress-bar-primary" role="progressbar" style="width:20%">
-          In PROGRESS
-        </div>
-        <div class="progress-bar progress-bar-success" role="progressbar" style="width:50%">
-          COMPLETED
-        </div>
-      </div>
+
+  <div  class="text-center">
+    <h2>reference # : {{orderDetail.refNumber}}</h2>
+
+ </div>
+
+
+  <div class="progress ">
+    <div class="progress-bar progress-bar-danger" role="progressbar" style="width:10%">
+      NOT CONFIRMED
     </div>
+    <div class="progress-bar progress-bar-warning" ng-hide="orderDetail.status=='open'" role="progressbar" style="width:20%">
+      CONFIRMED
+    </div>
+    <div class="progress-bar progress-bar-primary" ng-hide="orderDetail.status=='open'" role="progressbar" style="width:20%">
+      In PROGRESS
+    </div>
+    <div class="progress-bar progress-bar-success" ng-show="orderDetail.status=='closed'"  role="progressbar" style="width:50%">
+      COMPLETED
+    </div>
+  </div>
+  </div>
 
 
 
-  <table  class="table" >
+  <div class="">
+
+  <div class="col-sm-3">
+   <div class="panel panel-primary ">
+     <div class="panel-heading">
+       Customer Details
+     </div>
+     <div class="panel-body">
+       <h4>Customer Name : {{orderDetail.customerName}}</h4><p> </p>
+       <h4>Customer Phone : {{orderDetail.customerPhone}}</h4>
+       <h4>Customer Address : {{orderDetail.customerAddress}}</h4>
+       <h4>Date : {{orderDetail.date | limitTo : 10}}</h4>
+       <h4>Time : {{orderDetail.date | limitTo : 5 : 11}}</h4>
+     </div>
+   </div>
+
+
+   </div>
+
+    <div class="col-sm-9 pull-right">
+
+  <table  class="table table-inverse " >
       <thead>
       <tr>
         <th>#</th>
@@ -81,7 +103,7 @@
       <tbody>
       <tr scope="row" ng-repeat="item in orderDetail.ordersItems" >
 
-        <td>{{$index}}</td>
+        <td>{{$index+1}}</td>
         <td>{{item.name}}</td>
         <td>{{item.itemQuantity}}</td>
         <td>{{item.specialInstructions}}</td>
@@ -90,18 +112,13 @@
       </tbody>
     </table>
 
-      <div>
-        <p>Customer Name : {{orderDetail.customerName}}</p>
-        <p>Customer Phone : {{orderDetail.customerPhone}}</p>
-        <p>Customer Address : {{orderDetail.customerAddress}}</p>
-        <p>Date : {{orderDetail.date}}</p>
 
+    </div>
 
-      </div>
 
    <div class="text-center">
-     <button type="button" class="btn btn-default" ng-click="confirmStatus(orderDetail.refNumber)"><i class="glyphicon glyphicon-ok"></i> Confirm</button>
-     <button type="button" class="btn btn-default" ng-click="completedStatus(orderDetail.refNumber)"><i class="glyphicon glyphicon-ok"></i> Completed</button>
+     <button type="button" class="btn btn-default" ng-click="confirmStatus(orderDetail.refNumber)" ng-show="orderDetail.status=='open'"><i class="glyphicon glyphicon-ok"></i> Confirm</button>
+     <button type="button" class="btn btn-default" ng-click="completedStatus(orderDetail.refNumber)" ng-show="orderDetail.status=='InProgress'"><i class="glyphicon glyphicon-ok"></i> Completed</button>
 
    </div>
 
