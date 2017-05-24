@@ -62,7 +62,7 @@
       </thead>
 
       <tbody>
-      <tr scope="row" ng-repeat="order in allOrders | orderBy :'+' : true"  ng-if="order.status == 'open'" ng-init="playAudio()">
+      <tr scope="row" ng-repeat="order in allOrders | orderBy :'+' : true | limitTo : 300"  ng-if="order.status == 'open'" ng-init="playAudio()">
 
         <td>{{$index+1}}</td>
         <td>{{order.refNumber}}</td>

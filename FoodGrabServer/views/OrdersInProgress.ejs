@@ -65,7 +65,7 @@
       </thead>
 
       <tbody>
-      <tr scope="row" ng-repeat="order in inProgressOrders | orderBy :'+' : true" >
+      <tr scope="row" ng-repeat="order in inProgressOrders | orderBy :'+' : true | limitTo : 300" >
 
         <td>{{$index+1}}</td>
         <td>{{order.refNumber}}</td>
