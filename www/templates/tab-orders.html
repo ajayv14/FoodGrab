@@ -1,11 +1,10 @@
 
 <ion-view view-title="Orders">
  <ion-content class="padding">
-
    <ion-list>
     <ion-item  ng-repeat="order in orders  | orderBy :'+' : true | limitTo : 5" type="item-text-wrap">
       <h2>Order # : {{order.refNumber}}</h2>
-      <P>Status : {{order.status}}</p>
+      <P class="bg-primary">Status : {{order.status}}</p>
       <P>Date : {{order.date | limitTo : 10}}</p>
         <P>Time : {{order.date | limitTo : 5 : 11}}</p>
 

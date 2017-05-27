@@ -7,7 +7,7 @@ angular.module('starter.controllers', [])
     $scope.$root.badgeCount = 0;
 })
 
-.controller('ChatsCtrl', function($scope, Menu) {
+.controller('MenuCtrl', function($scope, Menu) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -17,18 +17,18 @@ angular.module('starter.controllers', [])
   //});
 
   $scope.choices = Menu.all();
-  $scope.remove = function(choice) {
-    Menu.remove(choice);
-  };
+
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Menu) {
+.controller('MenuDetailCtrl', function($scope, $stateParams, Menu) {
+//  alert('choiceId'+$stateParams.choiceId);
   $scope.menuItems = Menu.get($stateParams.choiceId);
 })
 
 .controller('CustomizationsCtrl', function($scope,$timeout,$stateParams,$location,Local,Menu,Price) {
 
    $scope.itemId = $stateParams.itemId
+   //alert('itemnid'+$stateParams.itemId);
    $scope.itemDetails = Menu.getSpecific($scope.itemId);
   //alert('itemDetails'+$scope.itemDetails);
    $scope.itemQuantity = 1; // default quantity
@@ -36,6 +36,7 @@ angular.module('starter.controllers', [])
 
    $scope.addToCart = function(itemId,splInstructions){
 
+     //alert('addtocart '+itemId);
       var order = {'itemId': $scope.itemDetails.item_Id,'name':$scope.itemDetails.name,'itemQuantity':$scope.itemQuantity,img:$scope.itemDetails.img, 'specialInstructions' :splInstructions, cost :$scope.itemQuantity*$scope.itemDetails.cost };
       //compute and update total cost
       Price.set(order.cost);
@@ -52,11 +53,13 @@ angular.module('starter.controllers', [])
 
 
    $scope.itemQuantityIncrement = function(){
-       $scope.itemQuantity++;
+
+     if($scope.itemQuantity<10) $scope.itemQuantity++;
+
    };
 
    $scope.itemQuantityDecrement = function(){
-     if($scope.itemQuantity>1) $scope.itemQuantity--;
+     if($scope.itemQuantity>1 ) $scope.itemQuantity--;
    };
 
  })
@@ -68,6 +71,17 @@ angular.module('starter.controllers', [])
 })
 
 .controller('CheckoutCtrl', function($scope,Local,Price,$http,$location,$ionicHistory) {
+
+
+  $scope.getSubTotal = function(){
+      var total = 0;
+      for(var i = 0; i < $scope.fullOrder.length; i++){
+          var fo = $scope.fullOrder[i];
+          total += fo.cost;
+      }
+      return total;
+  }
+
 
   $scope.refNumber = 'AJY-'+Math.random().toString(36).substring(2,8).toUpperCase();
   $scope.fullOrder = Local.get();
@@ -81,11 +95,10 @@ angular.module('starter.controllers', [])
    if($scope.totalCost==0)   $scope.submitFlag= true;
 
   $scope.removeItem = function(itemId){
-
+      // alert('remove '+itemId);
        Local.remove(itemId);
        $scope.fullOrder = Local.get(); // update order
        $scope.subCost = Price.getSubTotal();  //update subtotal
-       $scope.totalCost = Price.getTotal();
        $scope.totalCost = Price.getTotal();
        $scope.$root.badgeCount--;
 
@@ -143,6 +156,9 @@ angular.module('starter.controllers', [])
 })
 
 .controller('OrdersCtrl', function($scope,$http) {
+
+
+
 
     if(localStorage.getItem('customerEmail')!=='none'){
          var emailURL = 'http://68.66.193.148:3000/AllOrders/email/'+localStorage.getItem('customerEmail');

@@ -9,18 +9,19 @@
      <ion-item class="item-remove-animate item-avatar " ng-repeat="order in fullOrder" type="item-text-wrap">
         <img ng-src="{{order.img}}">
         <h2>{{order.name}}</h2>
-        <p ">Qnt : {{order.itemQuantity}}</p>
-        <p>$ {{order.cost}}</p>
+        <p>Qnt : {{order.itemQuantity}}</p>
+        <p>$ {{order.cost | limitTo : 5}}</p>
         <button class="button button-small text-right" ng-click="removeItem(order.itemId)" >- </button>
       </ion-item>
     </ion-list>
 
     <ion-item>
-      <p class="text-right">Subtotal $ {{subCost | limitTo : 5}}</p>
+      <p class="text-right">Subtotal $ {{ getSubTotal() | limitTo : 5}}</p>
+        <p class="text-right"></p>
     </ion-item>
 
     <ion-item>
-      <p  class="text-right">Total (after tax) $ {{totalCost | limitTo : 5}}</p>
+      <p  class="text-right">Total (after tax) $ {{ getSubTotal() + getSubTotal() * 0.1 | limitTo : 5}}</p>
     </ion-item>
 
   <div class="col text-center">

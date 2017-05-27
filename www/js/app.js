@@ -64,7 +64,7 @@ angular.module('starter', ['ionic','starter.controllers', 'starter.services'])
       views: {
         'tab-menu': {
           templateUrl: 'templates/tab-menu.html',
-          controller: 'ChatsCtrl'
+          controller: 'MenuCtrl'
         }
       }
     })
@@ -73,7 +73,7 @@ angular.module('starter', ['ionic','starter.controllers', 'starter.services'])
       views: {
         'tab-menu': {
           templateUrl: 'templates/menu-detail.html',
-          controller: 'ChatDetailCtrl'
+          controller: 'MenuDetailCtrl'
         }
       }
     })
